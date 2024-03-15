@@ -1,4 +1,4 @@
-git clone https://github.com/rivancorp/encorNARSI
+git clone https://github.com/ggenergg/RST-DualStackRouting
 
 
 //if walang IP address sa VM-RSTHayup
@@ -180,7 +180,7 @@ network 208.8.8.0
 network 24.2.4.0 mask 255.255.255.0
 network 44.44.44.44 mask 255.255.255.255
 network 45.4.5.0 mask 255.255.255.0
-!PretentInternet
+!PretendInternet
 network 0.0.0.0
 ip route 0.0.0.0 0.0.0.0 null 0
 ip route 10.0.0.0 255.0.0.0 208.8.8.1
@@ -199,7 +199,7 @@ network 22.22.22.22 mask 255.255.255.255
 network 24.2.4.0 mask 255.255.255.0
 network 25.2.5.0 mask 255.255.255.0
 network 32.3.2.0 mask 255.255.255.0
-!fakeInternet
+!PretendInternet
 network 0.0.0.0
 ip route 0.0.0.0 0.0.0.0 null 0
 ip route 10.0.0.0 255.0.0.0 207.7.7.1
@@ -262,7 +262,7 @@ router ospf 1
 end
 
 R2#
-!wait few more seconds pa at ba di ba kumpleto states.
+!wait few more seconds pa at baka di pa kumpleto ospf states.
 ping 8.8.8.8
 
 
@@ -367,7 +367,7 @@ IPV6 ADDRESSING FOR THE ISP'S
 	ipv6 unicast-routing
 	int lo4
 		ipv6 add b55::1/128
-	router bgp 45
+	router bgp 45	
 !!!*pag inalis yung comment sa dalawa below, todays ipv4 routing, mas maganda mag-dualstack <3
 	        !no bgp default ipv4-unicast
 		!bgp log-neighbor-changes
@@ -542,7 +542,7 @@ B   B22::1/128 [20/0]
 ############################################################################
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Configure ipv6 address on the ospf AREA~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-~
+ 
 !!!re-write ang mga areas sa topology
 !!!Tunneling ang ginagawa pag ang ISP is not ready for full ipv6
 !!!guhit tunnel bet. r4 (EIGRP) to R3(OSPF)
