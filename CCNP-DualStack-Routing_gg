@@ -6,6 +6,7 @@ rm -rf /etc/udev/rule (pindot tab)/70 (pindot tab)
 
 
 @@@ CONFIGURE RST AGAIN.
+
 D1:
 CONFIG T
 ip dhcp excluded-add 10.2.1.1 10.2.1.99
@@ -14,7 +15,10 @@ ip dhcp excluded-add 10.2.1.200 10.2.1.254
 ip dhcp pool vlan10
   network 10.2.1.0 255.255.255.0
   default-router 10.2.1.254
+end
 !
+
+
 D2:
 CONFIG T
 ip dhcp excluded-add 10.2.1.1 10.2.1.199
@@ -23,27 +27,37 @@ ip dhcp excluded-add 10.2.1.250 10.2.1.254
 ip dhcp pool vlan10
   network 10.2.1.0 255.255.255.0
   default-router 10.2.1.254
+end
 !
+
+
 A1:
 config t
 int e0/0
  switchport mode access
  switchport access vlan 10
+
+
 A2:
 config t
 int e1/0
  switchport mode access
  switchport access vlan 10
+
+
 p1:
 config t
 int e0/0
  ip add dhcp
  no shut
+
+
 p2:
 config t
 int e1/0
  ip add dhcp
  no shut
+
 
 TASK9.1: Combined d1 and d2 for hsrp:
 d1:
@@ -54,6 +68,8 @@ int vlan 10
  standby 10 priority 150
  standby 10 track e1/1 60
 end
+
+
 @@d2:
 config t
 int vlan 10
@@ -61,6 +77,8 @@ int vlan 10
  standby 10 preempt
  standby 10 priority 100
 end
+
+
 
 TASK.9.2: SUPER BASIC EIGRP FOR D1/D2:
 D1:
@@ -70,6 +88,7 @@ C        10.1.4.4/30 is directly connected, Ethernet1/1
 C        10.2.1.0/24 is directly connected, Vlan10
 C        10.2.2.0/24 is directly connected, Vlan20
 C        192.168.1.128/27 is directly connected, Vlan200
+
 
 D1:
 config t
@@ -123,6 +142,8 @@ router eigrp 100
  network 10.1.4.8 0.0.0.3
  network 10.1.4.4 0.0.0.3
  end
+
+
 
 OSPF NETWORK:
 R4:
@@ -194,7 +215,7 @@ neighbor 24.2.4.4 remote-as 45
 neighbor 25.2.5.5 remote-as 45
 neighbor 32.3.2.3 remote-as 3
 neighbor 207.7.7.1 remote-as 1
-network 207.0.0.0 mask 255.255.255.0
+network 207.7.7.0 mask 255.255.255.0
 network 22.22.22.22 mask 255.255.255.255
 network 24.2.4.0 mask 255.255.255.0
 network 25.2.5.0 mask 255.255.255.0
@@ -262,7 +283,7 @@ router ospf 1
 end
 
 R2#
-!wait few more seconds pa at baka di pa kumpleto ospf states.
+!wait few more seconds to 1 minute pa at baka di pa kumpleto bgp/ospf/eigrp states.
 ping 8.8.8.8
 !if hindi pa ma-ping ng sobrang tagal, try first kay I1, then kay R1, and then kay R2.
 
@@ -288,12 +309,35 @@ P1:
 config t
 ip route 0.0.0.0 0.0.0.0 10.2.1.1
 do sh ip route static
+end
+!
 
 @@static default routing in p2:
 p2:
 config t
 ip route 0.0.0.0 0.0.0.0 10.2.1.2
 do ping 8.8.8.8
+end
+!
+
+!You may want to trace kung saan dumaan papuntang 8.8.8.8
+p1/p2:
+traceroute 8.8.8.8
+
+!P1#traceroute 8.8.8.8
+!Type escape sequence to abort.
+!Tracing the route to 8.8.8.8
+!VRF info: (vrf in name/id, vrf out name/id)
+!  1 10.2.1.1 1 msec 0 msec 1 msec (d1)
+!  2 10.1.4.5 1 msec 1 msec 0 msec (r4)
+!  3 10.1.1.9 2 msec 1 msec 1 msec (r3)
+!  4 10.1.1.5 1 msec 0 msec 1 msec (r2)
+!  5 10.1.1.1 1 msec 0 msec 0 msec (r1)
+!  6 208.8.8.4 1 msec 1 msec 1 msec (isp1)
+!  7 45.4.5.5 33 msec *  2 msec (isp4 topmost)
+
+
+
 
 
 
@@ -308,10 +352,9 @@ do ping 8.8.8.8
 conf t
 alias exec bp6 show ipv6 int brief | exc down
 alias exec sr6 show ipv6 route
-alias exec sb6s show bgp ipv6 summ
+alias exec sbs6 show bgp ipv6 summ
 alias exec sc show run | sec
 end
-wr
 !
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~IPV6~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 IPV6 ADDRESSING FOR THE ISP'S
@@ -319,8 +362,8 @@ IPV6 ADDRESSING FOR THE ISP'S
 	conf t
 		ipv6 unicast-routing
 		int Lo8
-                        ipv6 add 2001:4860:4860::8888/64
-			!eto si google dns v6
+                        ipv6 add 2001:4860:4860::8888/128	
+			   !eto si google dns v6
 		int e0/1
 			ipv6 add b:1:4:b::5/64
 		int e0/2
@@ -328,7 +371,9 @@ IPV6 ADDRESSING FOR THE ISP'S
 		int e0/3
 			ipv6 add b:3:4:b::5/64
 			end
-				!so far wala sa exam about identifying the definite IPv6
+!so far wala sa exam about identifying the definite IPv6
+
+
 @ISP3
 	config t
 		ipv6 unicast-routing
@@ -339,6 +384,7 @@ IPV6 ADDRESSING FOR THE ISP'S
 		int e1/3
 			ipv6 add b:1:33:b::3/64
 			end
+
 			
 @ISP2
 	config t
@@ -375,7 +421,25 @@ IPV6 ADDRESSING FOR THE ISP'S
 			ipv6 add b:1:11:b::1/64
 			end
                ! ###################
-	!!!before proceding, punta sa ISP2 at ping ang mga direct neighbors, confirm 4 pingings
+	!!!before proceeding, punta sa ISP2 at ping ang mga direct neighbors, confirm 4 pingings
+
+@ISP4
+	ping b:3:4:b::3 !ISP3
+	ping b:2:4:b::2 !ISP2
+	ping b:1:4:b::4 !ISP1
+	
+@ISP2
+	ping b:1:2:b::3 !ISP3
+	ping b:2:4:b::5 !ISP4
+	ping b:2:1:b::4 !ISP1
+	ping b:1:22:b::1 !R1
+	
+@R1
+	ping b:1:33:b::3 !ISP3
+	ping b:1:22:b::2 !ISP2
+	ping b:1:11:b::4 !ISP1
+
+
 	!!! re-write sa topology yung mga ASes ng ISP's
 
 				~~~~~~~~~~~~~~~~~~~~~~~~~IPV6 BGP Configuration~~~~~~~~~~~~~~~~~~~~~~~
@@ -385,7 +449,7 @@ IPV6 ADDRESSING FOR THE ISP'S
 	int lo4
 		ipv6 add b55::1/128
 	router bgp 45	
-!!!*pag inalis yung comment sa dalawa below, todays ipv4 routing, mas maganda mag-dualstack <3
+!!!*pag inalis yung comment sa dalawa below, tanggal ipv4 routing, mas maganda mag-dualstack <3
 	        !no bgp default ipv4-unicast
 		!bgp log-neighbor-changes
 		neigh b:3:4:b::3 remote-as 3
@@ -402,7 +466,8 @@ IPV6 ADDRESSING FOR THE ISP'S
 			network b:2:4:b::/64
 			network b:1:4:b::/64
 			end
-			
+
+
 @ISP3
 	conf t
 		ipv6 unicast-routing
@@ -421,7 +486,8 @@ IPV6 ADDRESSING FOR THE ISP'S
 				network b:1:33:b::/64
 				network b33::1/128
 				end
-				
+
+
 @ISP2   !!!eto yung pini-ping kanina na direct neighbors bago mag-continue :)
 	conf t
 	ipv6 unicast-routing
@@ -445,7 +511,8 @@ IPV6 ADDRESSING FOR THE ISP'S
 				network b:1:22:b::/64
 				network b22::1/128
 				end
-				
+
+
 @ISP1
 	conf t
 	ipv6 unicast-routing
@@ -464,7 +531,10 @@ IPV6 ADDRESSING FOR THE ISP'S
 				network b:1:11:b::/64
 				network b44::1/128
 				end
-				
+
+
+
+
 @R1  !!!! hold here, blank sa kanila :) #MostImportant for originate
 	conf t
 		ipv6 unicast-routing
@@ -481,8 +551,13 @@ IPV6 ADDRESSING FOR THE ISP'S
 				network b:1:22:b::/64
 				network b:1:11:b::/64
 				end
+
+
+
 TEST:
-!!!old school sb6s
+!preferrably wait ka muna few secs. to half-minute, baka hindi pa complete si NOKU.
+!(Notification, Open, Keep Alive, Update)
+!!!old school sbs6
 R1#show bgp ipv6 summary
 Neighbor        V           AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
 B:1:11:B::4     4           45      10      10       13    0    0 00:02:14       11
@@ -501,41 +576,73 @@ B:2:4:B::5      4           45      10       9       13    0    0 00:03:09      
 % NOTE: This command is deprecated. Please use 'show bgp ipv6 unicast'
 
 !#Test connectivity from R1. Dapat mag ping lahat, lalo na yung Google ipv6.
+!R1:
 ping 2001:4860:4860::8888
 
+R1#ping 2001:4860:4860::8888
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 2001:4860:4860::8888, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 1/1/1 ms
+
+
+
+
+!still R1:
 sr6 bgp
 !dapat maraming B B B B B B
 
+R1#sr6 bgp
+IPv6 Routing Table - default - 17 entries
+Codes: C - Connected, L - Local, S - Static, U - Per-user Static route
+       B - BGP, HA - Home Agent, MR - Mobile Router, R - RIP
+       H - NHRP, I1 - ISIS L1, I2 - ISIS L2, IA - ISIS interarea
+       IS - ISIS summary, D - EIGRP, EX - EIGRP external, NM - NEMO
+       ND - ND Default, NDp - ND Prefix, DCE - Destination, NDr - Redirect
+       O - OSPF Intra, OI - OSPF Inter, OE1 - OSPF ext 1, OE2 - OSPF ext 2
+       ON1 - OSPF NSSA ext 1, ON2 - OSPF NSSA ext 2, ls - LISP site
+       ld - LISP dyn-EID, a - Application
+B   B:1:2:B::/64 [20/0]
+     via FE80::A8BB:CCFF:FE00:E31, Ethernet1/2
+B   B:1:4:B::/64 [20/0]
+     via FE80::A8BB:CCFF:FE00:F31, Ethernet1/1
+B   B:2:1:B::/64 [20/0]
+     via FE80::A8BB:CCFF:FE00:E31, Ethernet1/2
+B   B:2:4:B::/64 [20/0]
+     via FE80::A8BB:CCFF:FE00:E31, Ethernet1/2
+B   B:3:4:B::/64 [20/0]
+     via FE80::A8BB:CCFF:FE00:D31, Ethernet1/3
+B   B22::1/128 [20/0]
+     via FE80::A8BB:CCFF:FE00:E31, Ethernet1/2
+B   B33::1/128 [20/0]
+     via FE80::A8BB:CCFF:FE00:D31, Ethernet1/3
+B   B44::1/128 [20/0]
+     via FE80::A8BB:CCFF:FE00:F31, Ethernet1/1
+B   B55::1/128 [20/0]
+     via FE80::A8BB:CCFF:FE00:F31, Ethernet1/1
+B   2001:4860:4860::/64 [20/0]
+     via FE80::A8BB:CCFF:FE00:F31, Ethernet1/1
+
 !Kapag shoot sa banga lahat, potentially ubra na mag-work sa TELCO
 
+
+
 			
-@ISP4
-	ping b:3:4:b::3 !ISP4
-	ping b:2:4:b::2 !ISP2
-	ping b:1:4:b::4 !ISP1
-	
-@ISP2
-	ping b:1:2:b::3 !ISP3
-	ping b:2:4:b::5 !ISP4
-	ping b:2:1:b::4 !ISP1
-	ping b:1:22:b::1 !R1
-	
-@R1
-	ping b:1:33:b::3 !ISP3
-	ping b:1:22:b::2 !ISP2
-	ping b:1:11:b::4 !ISP1
 
-show ipv6 route
-!patience is a virtue
-R1:
-
-
-#CHECKING!
+!CHECKING PA MORE...
 @ISP2
     show bgp ipv6 unicast
 	show bgp ipv6 nei
 	show bgp ipv6 sum !Dapat Apat ang lumabas
-	
+
+B:1:2:B::3      4            3      16      15       14    0    0 00:08:37
+B:1:22:B::1     4            1      16      15       14    0    0 00:07:32
+B:2:1:B::4      4           45      17      15       14    0    0 00:08:06
+B:2:4:B::5      4           45      15      15       14    0    0 00:08:37
+
+
+
+
 @R1
 
 R1#sh ipv6 route bgp
@@ -556,6 +663,9 @@ B   B22::1/128 [20/0]
 	ping b44::1
 	ping b33::1
 	ping b22::1
+	ping 2001:4860:4860::8888
+
+
 ############################################################################
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Configure ipv6 address on the ospf AREA~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
