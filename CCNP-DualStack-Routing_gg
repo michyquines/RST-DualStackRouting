@@ -266,6 +266,22 @@ R2#
 ping 8.8.8.8
 !if hindi pa ma-ping ng sobrang tagal, try first kay I1, then kay R1, and then kay R2.
 
+!R2#ping 8.8.8.8
+!Type escape sequence to abort.
+!Sending 5, 100-byte ICMP Echos to 8.8.8.8, timeout is 2 seconds:
+!!!!!!
+!Success rate is 100 percent (5/5), round-trip min/avg/max = 1/1/1 ms
+
+!If lusot kay R2... lusot na kay R4, until kay D1/D2...
+
+!D1#ping 8.8.8.8
+!Type escape sequence to abort.
+!Sending 5, 100-byte ICMP Echos to 8.8.8.8, timeout is 2 seconds:
+!!!!!!
+!Success rate is 100 percent (5/5), round-trip min/avg/max = 1/1/3 ms
+
+!Hindi pa lusot kay P1/P2 kasi wala pang default static route
+!which is hndi alam ni PC saan ang first hop palabas sa WAN
 
 @@static default routing in P1:
 P1:
