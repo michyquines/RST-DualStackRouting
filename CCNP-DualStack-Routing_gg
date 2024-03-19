@@ -264,6 +264,7 @@ end
 R2#
 !wait few more seconds pa at baka di pa kumpleto ospf states.
 ping 8.8.8.8
+!if hindi pa ma-ping ng sobrang tagal, try first kay I1, then kay R1, and then kay R2.
 
 
 @@static default routing in P1:
