@@ -686,6 +686,8 @@ B   B22::1/128 [20/0]
 			ipv6 address 2026::12:1/122
 			end
 
+
+
 @R2
 	conf t
 		ipv6 unicast-routing
@@ -698,6 +700,9 @@ B   B22::1/128 [20/0]
 		int e1/1
 			ipv6 address 2026::1:1/122
 			end
+
+
+
 
 @R3  !!! OOOPPPPSSSIE... Blank again to them :)
 	conf t
@@ -717,6 +722,9 @@ B   B22::1/128 [20/0]
 		int e1/1
 			ipv6 address 2026::1:2/122
 			end
+
+
+
 
 @R4
 	conf t
@@ -749,12 +757,13 @@ B   B22::1/128 [20/0]
 			end
 			
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-			end
 ##################################
 
 ####################################################################################################
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ROUTING FOR OSPF~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-		
+
+
+
 @R1
 	conf t
 		ipv6 router ospf 6
@@ -766,6 +775,8 @@ B   B22::1/128 [20/0]
 		int e1/0
 			ipv6 ospf 6 area 12
 			end
+
+
 			
 @R2    		!!!blanks here :)
 	conf t
@@ -778,6 +789,8 @@ B   B22::1/128 [20/0]
 		int e1/2
 			ipv6 ospf 6 area 12
 			end
+
+
 @R3
 	conf t
 		ipv6 router ospf 6
@@ -790,6 +803,8 @@ B   B22::1/128 [20/0]
 			ipv6 ospf 6 area 0
 			end
 
+
+
 @R4    !!!blanks too  
 	conf t
 		ipv6 router ospf 6
@@ -799,25 +814,31 @@ B   B22::1/128 [20/0]
 		interface Tunnel34
 			ipv6 ospf 6 area 34
 			end
+
+
+
 ####################################################################################################
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~!!TUNNELING!!~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-!!!!kunin si 2026::34:2/122 sa R4, IPv6 nya ito sa Tunnel nya.
+!!!! i-reference si 2026::34:2/122 sa R4, IPv6 nya ito sa Tunnel nya.
 
 #TESTING TIME! IPv6 is dependent on IPv4
 
 @R3
 	ping 2026::34:1 !Mag piping ito
 	ping 2026::34:2 !Di mag piping ito, kasi nga hindi ipv6 native
-	show run | sec ospf !show ospf routes xxx 
-			    !might need some recall Network IP v4 concepts
+	show run | sec ospf      !show ospf routes xxx 
+			          !might need some recall Network IP v4 concepts
 
+!input these configs @R3
 	conf t
 		router ospf 1
 			network 3.3.3.3 0.0.0.0 area 34
 			network 10.1.1.8 0.0.0.3 area 34
 			end
-			
+
+
+
 @R4   !!!! Kailangan ma-fix itong OSPF pang ipv4 muna sa area34
 	show run | sec ospf !show ospf routes xxx
 		
@@ -829,11 +850,26 @@ B   B22::1/128 [20/0]
 
 	!!!mejo wait mga 1 min. kasi 	may mga states na dadaan pa
 	!!!Down,Attempt,Init,2-Way,Exstart,Exchange,Loading,Full. (sh ip ospf nei)
+
 	!!! ping 2026::34:2 sa R1, hindi ma-ping kanina... lusot na now :)
+
+R1#ping 2026::34:2 
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 2026::34:2, timeout is 2 seconds:
+!!!!!
+
+
+
 
 #TESTING
 @R4	!nandon na yung di pingable kanina, at limang OI na naka-tunnel.
-	show ipv6 route ospf   !OI  2026::1:0/122 & OI  2026::12:0/122 must see
+	!OI  2026::1:0/122 & OI  2026::12:0/122 must see
+
+	show ipv6 route ospf   
+
+	OI  2026::1:0/122 [110/1010] via FE80::303:303, Tunnel34
+	OI  2026::12:0/122 [110/1020] via FE80::303:303, Tunnel34
+		
 	ping 2026::12:1
 	
 #MOVING ON
@@ -850,7 +886,8 @@ config t
 ipv6 router ospf 6
   default-information originate always
   redistribute bgp 1 metric 69
-  
+
+
 OSPFv3 to BGP:
 R1 pa rin:
 config t
@@ -859,7 +896,7 @@ router bgp 1
    redistribute ospf 6 match internal external 1 external 2
 
 
-!!!puntanan yung kadulu-duluhan which is R4, dapat tagos na kay google :)
+!!!puntanan yung kadulu-duluhan which is R4, dapat tagos ang ping b55::1
 !!! sr6 ospf kay R4 --->  andami na routes compare sa kanina na 5 OI lang
 !!! ping and traceroute 2001:4860:4860::8888
   
@@ -900,6 +937,9 @@ router bgp 1
 		int vlan 20
 			ipv6 add 10:2:2:12::1/64
 			end
+
+
+
 @D2
 	conf t
 		ipv6 unicast-routing
@@ -926,7 +966,6 @@ router bgp 1
 #######################################################################################################
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#CONFIGURE EIGRP FOR R4, D1 and D2~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#CONFIGURE EIGRP FOR R4, D1 and D2~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 @R4    !!!any number for router eigrp ## basta same-same sa implem
 	conf t
@@ -941,6 +980,8 @@ router bgp 1
 		int e1/1
 			ipv6 eigrp 10
 			end
+
+
 
 !!!bp6 kay D1 to determine mga vlans na may ipv6 na bubuhayin...
 
@@ -985,25 +1026,37 @@ router bgp 1
 
 
 !!!punta kay R4, meron na syang mga D!!!
+@R4
+R4#sr6 eigrp   
+
+D   10:2:1:12::/64 [90/281856]
+     via FE80::A8BB:CCFF:FE00:611, Ethernet1/0
+     via FE80::A8BB:CCFF:FE00:711, Ethernet1/1
+D   10:2:2:12::/64 [90/281856]
+     via FE80::A8BB:CCFF:FE00:611, Ethernet1/0
+     via FE80::A8BB:CCFF:FE00:711, Ethernet1/1
+D   11:11:11:11::1/128 [90/409600]
+     via FE80::A8BB:CCFF:FE00:611, Ethernet1/0
+D   192:168:1:1234::/64 [90/281856]
+     via FE80::A8BB:CCFF:FE00:611, Ethernet1/0
+     via FE80::A8BB:CCFF:FE00:711, Ethernet1/1
+D   2026::3:0/122 [90/281856]
+     via FE80::A8BB:CCFF:FE00:611, Ethernet1/0
+     via FE80::A8BB:CCFF:FE00:711, Ethernet1/1
+D   FEC0::11:0/122 [90/409600]
+     via FE80::A8BB:CCFF:FE00:611, Ethernet1/0
 			
+
+
 
 ####################################################################################################
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~END DEVICES CONFIGURATION~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !!!sa pag-acquire ng IP's, sa IPv4... dalawa... STATIC/DYNAMIC
 !!!sa IPv6... tatlo... how??? ... BP kay D1 (meron) ... bp6 (wala)
-!!! (1) static (like kay @P1)   (2)autoconfig   (3)
-
-
+!!! (1) static (like kay @P1)   (2)autoconfig   (3)EUI-64
 
 #Moving On
-@A1
-	cn
-	show run int e0/0
-	
-@A2
-	cn
-	show run int e0/0
-	
+
 @P1	!static IPv6
 	conf t
 		ipv6 unicast-routing
@@ -1046,20 +1099,29 @@ router bgp 1
 		ipv6 address 10:2:1:12::/64 eui-64
 		end
 	bp6
-	!see to it na yung mac ginawang ipv6-ish, get it then ping kay P1
+	!wait few secs. and see to it na yung mac ginawang ipv6-ish, get it then ping kay P1
 
+	show ipv6 int brief
+	!
 	ping 10:2:1:12::2
-	show ipv6 int brief
-	show ipv6 int brief
+
 
 
 ##############################TRy This!!!###########################################################
-!!!ping 2001:4860:4860::8888  ... di pa ubra kasi meron pang racist na pampam
+
+P2#ping 2001:4860:4860::8888 
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 2001:4860:4860::8888, timeout is 2 seconds:
+UUUUU
+Success rate is 0 percent (0/5)
+
+!!!ping 2001:4860:4860::8888  ... di pa ubra kasi matapobre pa rin si EIGRP sa IPv6
+
+
+
 
 R4:
 !REDISTRIBUTE EIGRP TO OSPF
-!i-REcall yung RACIST pa rin kahit ipv6
-
 
 conf t
 	ipv6 router ospf 6
@@ -1068,15 +1130,42 @@ conf t
 		
 
 !REDISTRIBUTE OSPF TO EIGRP
+!i-REcall yung RACIST pa rin kahit ipv6
+
 config t
 	ipv6 router eigrp 10
 		redistribute ospf 6 metric 10000 100 255 1 1500 include-connected
 
 	!!!EIGRP kain ospf 
 
-!!!punta kay D1, sr6 eigrp, supposedly nadnyan na ang google. EX 2001:4860:4860::/64
+
+
+!!!punta kay D1, sr6 eigrp, supposedly nadnyan na ang Google DNS v6. EX 2001:4860:4860::/64
+D1#sr6 eigrp | inc EX
+       IA - ISIS interarea, IS - ISIS summary, D - EIGRP, EX - EIGRP external
+EX  ::/0 [170/332800]
+EX  B:1:2:B::/64 [170/332800]
+EX  B:1:4:B::/64 [170/332800]
+EX  B:2:1:B::/64 [170/332800]
+EX  B:2:4:B::/64 [170/332800]
+EX  B:3:4:B::/64 [170/332800]
+EX  B22::1/128 [170/332800]
+EX  B33::1/128 [170/332800]
+EX  B44::1/128 [170/332800]
+EX  B55::1/128 [170/332800]
+EX  2001:4860:4860::/64 [170/332800]
+EX  2026::1:0/122 [170/332800]
+EX  2026::12:0/122 [170/332800]
+EX  2026::34:0/122 [170/332800]
+EX  FEC0:1::1/128 [170/332800]
+EX  FEC0:2::2/128 [170/332800]
+EX  FEC0:3::3/128 [170/332800]
+
+
 !!!ping 2001:4860:4860::8888   ---> D1 lang ang makaka-ping, wala pa sa P1/P2
-!!! so far.. B pasok sa O... O pasok sa D... wala pang STATIC/Default Route
+
+
+!!! so far routes... B pasok sa O... O pasok sa D... wala pang STATIC/Default Route sa P1/P2
 
 
 ####################################################################################################
@@ -1096,7 +1185,23 @@ config t
 ping 2001:4860:4860::8888
 ping 8.8.8.8
 
+
+P1#ping 2001:4860:4860::8888
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 2001:4860:4860::8888, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 2/2/2 ms
+P1#ping 8.8.8.8
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 8.8.8.8, timeout is 2 seconds:
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 1/1/3 ms
+
+
+
 !!! DUAL-STACK B*TCH*S :)  
+
+
 
 ========================================================
 HOLY MOTHER OF GOD TAMA NA MUNA... I STILL NEED MORE LEARNING TO GO FURTHER (ToT)
