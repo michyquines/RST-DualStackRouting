@@ -227,6 +227,8 @@ ip route 0.0.0.0 0.0.0.0 null 0
 ip route 10.0.0.0 255.0.0.0 208.8.8.1
 end
 
+
+
 @@@ISP2:
 config t
 router bgp 2
@@ -492,7 +494,7 @@ IPV6 ADDRESSING FOR THE ISP'S
 			neigh b:2:4:b::2 activate
 			neigh b:1:4:b::4 activate
 			network b55::1/128
-			network 2001:4860:4860::/64
+			network 2001:4860:4860::8888/128
 			network b:3:4:b::/64
 			network b:2:4:b::/64
 			network b:1:4:b::/64
@@ -534,9 +536,7 @@ IPV6 ADDRESSING FOR THE ISP'S
 				neigh b:2:1:b::4 activate
 				neigh b:1:2:b::3 activate
 				neigh b:1:22:b::1 activate
-				!!!*kulang ito sa script 
 				network b:2:4:b::/64
-				!!!*hue hue hue, napansin kaya nila :P
 				network b:1:2:b::/64
 				network b:2:1:b::/64
 				network b:1:22:b::/64
@@ -706,7 +706,7 @@ B   B22::1/128 [20/0]
 !!!guhit tunnel bet. r4 (EIGRP) to R3(OSPF)
 
 
-@R1   !!!Hold at may blank sa kanila :)
+@R1 
 	conf t
 		ipv6 unicast-routing
 		interface Loopback1
@@ -881,7 +881,6 @@ B   B22::1/128 [20/0]
 
 	!!!mejo wait mga 1 min. kasi 	may mga states na dadaan pa
 	!!!Down,Attempt,Init,2-Way,Exstart,Exchange,Loading,Full. (sh ip ospf nei)
-
 	!!! ping 2026::34:2 sa R1, hindi ma-ping kanina... lusot na now :)
 
 R1#ping 2026::34:2 
@@ -1110,7 +1109,7 @@ D   FEC0::11:0/122 [90/409600]
 		end
 
 	ping 10:2:1:12::2
-	show ipv6 int brief
+	show ipv6 int brief | ex una
 	
 	!show something... payag si ipv6 na multiple assign sa interface
 	sh run int e0/0
@@ -1146,7 +1145,7 @@ Sending 5, 100-byte ICMP Echos to 2001:4860:4860::8888, timeout is 2 seconds:
 UUUUU
 Success rate is 0 percent (0/5)
 
-!!!ping 2001:4860:4860::8888  ... di pa ubra kasi matapobre pa rin si EIGRP sa IPv6
+!!!ping 2001:4860:4860::8888  ... di pa Ubra kasi matapobre pa rin si EIGRP sa IPv6
 
 
 
