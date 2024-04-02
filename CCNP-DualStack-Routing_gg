@@ -57,26 +57,46 @@ config t
 int e1/0
  ip add dhcp
  no shut
+do sh ip int br | ex una
+
+Interface                  IP-Address      OK? Method Status                Protocol
+Ethernet1/0                10.2.1.201      YES DHCP   up                    up
 
 
-TASK9.1: Combined d1 and d2 for hsrp:
-d1:
+
+
+TASK9.1: Make the Most Expensive Switch: be the Root Bridge
+                                 & 2nd root Bridge:
+				 & Trunking
+D1:
 config t
-int vlan 10
- standby 10 ip 10.2.1.254
- standby 10 preempt
- standby 10 priority 150
- standby 10 track e1/1 60
+no logging console
+no ip domain-lookup
+spanning-tree vlan 1-100 root primary
+
+Int Range e0/0-3, e1/2-3
+  switchport trunk encap Dot1Q
+  switchport mode trunk
+  exit
+
+vlan 2
+name CHECKMEEEE
 end
 
 
-@@d2:
+D2:
 config t
-int vlan 10
- standby 10 ip 10.2.1.254
- standby 10 preempt
- standby 10 priority 100
+no logging console
+no ip domain-lookup
+spanning-tree vlan 1-100 root secondary
 end
+
+!verify if VLANS are propagating
+@a1,a2,d2: 
+sh vlan brief
+!there should be CHECKMEEEE
+
+
 
 
 
@@ -285,7 +305,7 @@ end
 R2#
 !wait few more seconds to 1 minute pa at baka di pa kumpleto bgp/ospf/eigrp states.
 ping 8.8.8.8
-!if hindi pa ma-ping ng sobrang tagal, try first kay I1, then kay R1, and then kay R2.
+!if hindi pa ma-ping ng sobrang tagal, try first kay I4, then I1, then kay R1, and then kay R2.
 
 !R2#ping 8.8.8.8
 !Type escape sequence to abort.
@@ -356,7 +376,18 @@ alias exec sbs6 show bgp ipv6 summ
 alias exec sc show run | sec
 end
 !
+
+
+
+
+
+
+
+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~IPV6~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+!It may be needed to review the basics and rulings of IPv6
+
+
 IPV6 ADDRESSING FOR THE ISP'S
 @ISP4
 	conf t
