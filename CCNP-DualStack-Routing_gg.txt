@@ -1424,7 +1424,7 @@ router bgp 45
 end
 
 R1:
-show ip bgp summ
+show ip bgp
  *   51.51.51.51/32   207.7.7.2                              0 2 45 i
  *>                   208.8.8.4                              0 45 i
  *   52.52.52.52/32   207.7.7.2                              0 2 45 i
@@ -1465,7 +1465,7 @@ clear ip bgp * soft
 
 
 
-R1# 	 !show saan dadaan si 52.52.52.52
+R1# sh ip bgp 52.52.52.52	 !show saan dadaan si 52.52.52.52
 
     207.7.7.2 from 207.7.7.2 (22.22.22.22)
       Origin IGP, localpref 100, weight 52, valid, external, best <<<
@@ -1788,7 +1788,6 @@ no route-map ISP1for2233
 router bgp 1
   no neighbor 208.8.8.4 route-map ISP1for2233 in
 end
-cibs
 !
 
 
@@ -2519,7 +2518,7 @@ STEP 3: BEST TO USE STATIC ROUTES!
 	ip route 0.0.0.0 0.0.0.0 206.6.6.6 40
 	
 	
-STEP 4: CREATE A PROTOCOL BASED ROUTING.
+STEP 4: CREATE A PROTOCOL BASED ROUTING. (a.k.a. Policy Based Routing [PBR])
 	route-map PBR permit 40
 		match ip add 12
 		set ip next-hop verify-availability 206.6.6.6 track 40
@@ -2604,7 +2603,7 @@ ip route 0.0.0.0 0.0.0.0 209.9.9.3 30
 !
 route-map PBR permit 10
  match ip address 10
- set ip next-hop verify-availability 208.8.8.4 1 track 10
+ set ip next-hop verify-availability 208.8.8.4 1 track 10     !!!final step to forever ping
 !
 route-map PBR permit 20
  match ip address 11
