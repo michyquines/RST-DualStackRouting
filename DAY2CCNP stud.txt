@@ -288,8 +288,8 @@ sh ip bgp summary
 !there should be oras, if merong never... check the config of both peer routers (sh run | sec bgp)
 
 ping 8.8.8.8
-!this should reply... if not yet, wait for few seconds at baka hindi pa kumpleto NOKU States
-!or their ARPs, pwede rin go to ISP2 and ping 8.8.8.8 there, and then go back here in R1 ping again.
+!this should reply... if not yet, wait for few seconds at baka hindi pa kumpleto NOKU States or their ARPs, 
+!pwede rin go to ISP2 and ping 8.8.8.8 there, and then go back here in R1 ping again.
 
 
 
