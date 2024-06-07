@@ -283,26 +283,42 @@ router bgp 45
  network 45.4.5.0 mask 255.255.255.0
 end
 
+@R1
+sh ip bgp summary
+!there should be oras, if merong never... check the config of both peer routers (sh run | sec bgp)
+
+ping 8.8.8.8
+!this should reply... if not yet, wait for few seconds at baka hindi pa kumpleto NOKU States
+!or their ARPs, pwede rin go to ISP2 and ping 8.8.8.8 there, and then go back here in R1 ping again.
 
 
-RE-Task9.5: Redistribution Skills for CCNP
+
+
+
+RE-Task9.5: Redistribution Skills for CCNP (similarly looks like our PH Immigration)
 R4:
+	!ipasok ang eigrp sa mundo ng ospf 
 config t
-!ipasok ang eigrp sa mundo ng ospf
 router ospf 1
   redistribute eigrp 100 subnets
   exit
-!ipasok ang ospf sa mundo ng eigrp
+	!so easy parang banyaga pasok pinas, wala nang masyadong hinihingi kahit drug lord pa yung foreigner
+
+	!ipasok ang ospf sa mundo ng eigrp
 router eigrp 100
   redistribute ospf 1 metric 1544 2000 255 1 1500
+end
+	!kapag pinoy lalabas ng bansa, ang daming hiningi, pati school/college diploma hinihingi.
+	!the redistribute parameters can be viewd via "show int e1/0 (or e1/1, e0/0, etc...) "
 
 
 R1:
-!redistrubte internet routes to ospf from BGP.
+	!redistrubte internet routes to ospf from BGP, and they always luv each other <3
 config t
 router ospf 1
  default-information originate always
 end
+
 
 R2#
 !wait few more seconds to 1 minute pa at baka di pa kumpleto bgp/ospf/eigrp states.
@@ -364,7 +380,7 @@ traceroute 8.8.8.8
 
 
 
-@@@@@IPVV6@@@@@@@@@@
+@@@@@ IPv6 Routing @@@@@@@@@@
 ######################################################################
 
 !!!Palitawin yung RST Topology ipv6
@@ -404,7 +420,7 @@ IPV6 ADDRESSING FOR THE ISP'S
 		int e0/3
 			ipv6 add b:3:4:b::5/64
 			end
-!so far wala sa exam about identifying the definite IPv6
+!so far wala sa exam about identifying the definite IPv6 lab
 
 
 @ISP3
@@ -454,7 +470,7 @@ IPV6 ADDRESSING FOR THE ISP'S
 			ipv6 add b:1:11:b::1/64
 			end
                ! ###################
-	!!!before proceeding, punta sa ISP2 at ping ang mga direct neighbors, confirm 4 pingings
+	!!!before proceeding, punta sa mga ISPs at ping ang mga direct neighbors, confirm 4 pingings
 
 @ISP4
 	ping b:3:4:b::3 !ISP3
@@ -473,7 +489,7 @@ IPV6 ADDRESSING FOR THE ISP'S
 	ping b:1:11:b::4 !ISP1
 
 
-	!!! re-write sa topology yung mga ASes ng ISP's
+	!!! recall sa topology yung mga ASes ng ISP's
 
 				~~~~~~~~~~~~~~~~~~~~~~~~~IPV6 BGP Configuration~~~~~~~~~~~~~~~~~~~~~~~
 @ISP4		!!!similar yung config from ipv4 but with some changes.
@@ -482,7 +498,7 @@ IPV6 ADDRESSING FOR THE ISP'S
 	int lo4
 		ipv6 add b55::1/128
 	router bgp 45	
-!!!*pag inalis yung comment sa dalawa below, tanggal ipv4 routing, mas maganda mag-dualstack <3
+!!!*pag inalis yung comment sa dalawa below, tanggal ipv4 routing, mas maganda mag-dualstack (meaning both working IP Routing on v4 and v6) <3
 	        !no bgp default ipv4-unicast
 		!bgp log-neighbor-changes
 		neigh b:3:4:b::3 remote-as 3
@@ -566,6 +582,7 @@ IPV6 ADDRESSING FOR THE ISP'S
 
 
 
+
 @R1  !!!! hold here, blank sa kanila :) #MostImportant for originate
 	conf t
 		ipv6 unicast-routing
@@ -577,7 +594,7 @@ IPV6 ADDRESSING FOR THE ISP'S
 				neigh b:1:33:b::3 activate
 				neigh b:1:22:b::2 activate
 				neigh b:1:11:b::4 activate
-				network FEC0:1::/122
+				network FEC0:1::/122    !loopback ni R1 v6
 				network b:1:33:b::/64
 				network b:1:22:b::/64
 				network b:1:11:b::/64
@@ -585,7 +602,7 @@ IPV6 ADDRESSING FOR THE ISP'S
 
 
 
-TEST:
+TEST: #MostImportant before default-information originate
 !preferrably wait ka muna few secs. to half-minute, baka hindi pa complete si NOKU.
 !(Notification, Open, Keep Alive, Update)
 !!!old school sbs6
@@ -703,7 +720,7 @@ B   B22::1/128 [20/0]
  
 !!!re-write ang mga areas sa topology
 !!!Tunneling ang ginagawa pag ang ISP is not ready for full ipv6
-!!!guhit tunnel bet. r4 (EIGRP) to R3(OSPF)
+!!!guhit tunnel bet. r4 (EIGRP) to R3(OSPF) (a.k.a tunnel34)
 
 
 @R1 
@@ -858,7 +875,7 @@ B   B22::1/128 [20/0]
 @R3
 	ping 2026::34:1 !Mag piping ito
 	ping 2026::34:2 !Di mag piping ito, kasi nga hindi ipv6 native
-	show run | sec ospf      !show ospf routes xxx 
+	show run | sec ospf      !show ospf routes xxx ... something is missing... the network 3.3.3.3 that tunnels thru Loopback
 			          !might need some recall Network IP v4 concepts
 
 !input these configs @R3
@@ -927,13 +944,13 @@ router bgp 1
 
 
 !!!puntanan yung kadulu-duluhan which is R4, dapat tagos ang ping b55::1
-!!! sr6 ospf kay R4 --->  andami na routes compare sa kanina na 5 OI lang
+!!! sr6 ospf kay R4 --->  andami na routes especially OE2 compare sa kanina na 5 OI lang
 !!! ping and traceroute 2001:4860:4860::8888
   
  ####################################################################################################
 ~~~~~~~~~~~~~~~~~~~~~~~CONFIGURE INTERNAL NETWORK  IPV6 ADDRESSING~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-@R4   !!!Blank AGAD :)
+@R4   !!!IPv6 Addressing sa Internal for EIGRP
 	!!! baka kulang yung topology D1 to R4 kalye 10:1:4:14::4/64 :)
 	!!! baka kulang yung topology D2 to R4 kalye 10:1:4:24::4/64 :)
 
@@ -1057,7 +1074,7 @@ router bgp 1
 
 !!!punta kay R4, meron na syang mga D!!!
 @R4
-R4#sr6 eigrp   
+R4#sr6 eigrp   !(show ipv6 route eigrp)
 
 D   10:2:1:12::/64 [90/281856]
      via FE80::A8BB:CCFF:FE00:611, Ethernet1/0
@@ -1145,9 +1162,9 @@ Sending 5, 100-byte ICMP Echos to 2001:4860:4860::8888, timeout is 2 seconds:
 UUUUU
 Success rate is 0 percent (0/5)
 
-!!!ping 2001:4860:4860::8888  ... di pa Ubra kasi matapobre pa rin si EIGRP sa IPv6
+!!!ping 2001:4860:4860::8888  ... waley rin ping kahit kay P1, D1, and D2... BUT in R4 ping works!!! BAKET!!!???
 
-
+!... di pa Ubra kasi matapobre pa rin si EIGRP sa IPv6 ... may redistribution malupet pa rin.
 
 
 R4:
