@@ -166,20 +166,20 @@ router eigrp 100
 
 
 OSPF NETWORK:
-R4:
+R4:	!kalye network bet. R4 - R3
 config t
 router ospf 1
 network 10.1.1.8 0.0.0.3 area 34
 end
 
-R3:
+R3:	!kalye network bet. R4 - R3 - R2
 config t
 router ospf 1
 network 10.1.1.4 0.0.0.3 area 0
 network 10.1.1.8 0.0.0.3 area 34
 end
 
-R2:
+R2:	!kalye network bet. R3 - R2 - R1
 config t
 router ospf 1
 network 10.1.1.4 0.0.0.3 area 0
@@ -187,7 +187,7 @@ network 10.1.1.0 0.0.0.3 area 12
 end
 
 
-R1:
+R1:	!kalye network bet. R2 (ibang config pa-ISPs)
 config t
 router ospf 1
 network 10.1.1.0 0.0.0.3 area 12
