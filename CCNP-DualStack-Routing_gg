@@ -57,7 +57,7 @@ config t
 int e1/0
  ip add dhcp
  no shut
-do sh ip int br | ex una
+do sh ip int br | ex una	!ulitin pa if wala pa, minsan mejo matagal dahil kay DORA
 
 Interface                  IP-Address      OK? Method Status                Protocol
 Ethernet1/0                10.2.1.201      YES DHCP   up                    up
@@ -101,7 +101,7 @@ sh vlan brief
 
 
 TASK.9.2: SUPER BASIC EIGRP FOR D1/D2:
-D1:
+D1:	!Labas mga Kalye (Network) IP
 D1#sh ip route connected | inc C
 Codes: L - local, C - connected, S - static, R - RIP, M - mobile, B - BGP
 C        10.1.4.4/30 is directly connected, Ethernet1/1
@@ -404,7 +404,7 @@ end
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~IPV6~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !It may be needed to review the basics and rulings of IPv6
-
+!as of June 2024, meron daw lab na IPv6 Subnetting LAB sa CCNA, it is likely and suprisingly magkakaroon rin sa CCNP.
 
 IPV6 ADDRESSING FOR THE ISP'S
 @ISP4
@@ -420,7 +420,7 @@ IPV6 ADDRESSING FOR THE ISP'S
 		int e0/3
 			ipv6 add b:3:4:b::5/64
 			end
-!so far wala sa exam about identifying the definite IPv6 lab
+
 
 
 @ISP3
@@ -870,7 +870,7 @@ B   B22::1/128 [20/0]
 
 !!!! i-reference si 2026::34:2/122 sa R4, IPv6 nya ito sa Tunnel nya.
 
-#TESTING TIME! IPv6 is dependent on IPv4
+#TESTING TIME! sa OSPF... IPv6 is dependent on IPv4
 
 @R3
 	ping 2026::34:1 !Mag piping ito
@@ -1251,7 +1251,7 @@ Success rate is 100 percent (5/5), round-trip min/avg/max = 1/1/3 ms
 
 
 ========================================================
-HOLY MOTHER OF GOD TAMA NA MUNA... I STILL NEED MORE LEARNING TO GO FURTHER (ToT)
+HOLY MOTHER OF GOD TAMA NA MUNA... I STILL NEED MORE LEARNING and PRACTICE TO GO FURTHER [iyak! (ToT) ]
 MAGAWAN NA RIN NG SNAPSHOT ITO... PARA MAY MABABALIKANG MAGANDANG BUHAY ^_^
 ========================================================
 
