@@ -476,14 +476,14 @@ IPV6 ADDRESSING FOR THE ISP'S
 	ping b:3:4:b::3 !ISP3
 	ping b:2:4:b::2 !ISP2
 	ping b:1:4:b::4 !ISP1
-  ping 8:8:8:8::8888 !GoogleDNS v6 Kuno
+        ping 8:8:8:8::8888    !GoogleDNS v6 Kuno
 	
 @ISP2
 	ping b:1:2:b::3 !ISP3
 	ping b:2:4:b::5 !ISP4
 	ping b:2:1:b::4 !ISP1
 	ping b:1:22:b::1 !R1
-  ping 8:8:8:8::8888 !GoogleDNS v6 Kuno
+        ping 8:8:8:8::8888     !GoogleDNS v6 Kuno    !hindi mapi-ping syempre, wala pang routing :)
 	
 @R1
 	ping b:1:33:b::3 !ISP3
@@ -508,15 +508,15 @@ IPV6 ADDRESSING FOR THE ISP'S
 		neigh b:1:4:b::4 remote-as 450
 		address-family ipv6
 !!!na-encounter ko sa encor exam yung activate, kaya sya nanjan.
-			neigh b:3:4:b::3 activate
-			neigh b:2:4:b::2 activate
-			neigh b:1:4:b::4 activate
-			network b55::1/128
-			network 8:8:8:8::8888 !GoogleDNS v6 Kuno
-			network b:3:4:b::/64
-			network b:2:4:b::/64
-			network b:1:4:b::/64
-			end
+		neigh b:3:4:b::3 activate
+		neigh b:2:4:b::2 activate
+		neigh b:1:4:b::4 activate
+		network b55::1/128
+		network 8:8:8:8::8888/128 !GoogleDNS v6 Kuno
+		network b:3:4:b::/64
+		network b:2:4:b::/64
+		network b:1:4:b::/64
+		end
 
 
 @ISP3
