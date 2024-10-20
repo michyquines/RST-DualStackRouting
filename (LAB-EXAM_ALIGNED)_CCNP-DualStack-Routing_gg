@@ -634,7 +634,7 @@ Type escape sequence to abort.
 Sending 5, 100-byte ICMP Echos to 8:8:8:8::8888, timeout is 2 seconds:
 !!!!!
 Success rate is 100 percent (5/5), round-trip min/avg/max = 1/1/1 ms
-
+!if "No valid route" daw... baka hindi pa buo si NOKU States... wait few seconds or a minute then try again :)
 
 
 
@@ -670,7 +670,7 @@ B   B44::1/128 [20/0]
      via FE80::A8BB:CCFF:FE00:F31, Ethernet1/1
 B   B55::1/128 [20/0]
      via FE80::A8BB:CCFF:FE00:F31, Ethernet1/1
-B   8:8:8:8::/64 [20/0]
+B   8:8:8:8::8888/128 [20/0]
      via FE80::A8BB:CCFF:FE00:F31, Ethernet1/1
 
 !Kapag shoot sa banga lahat, potentially ubra na mag-work sa TELCO
@@ -709,8 +709,8 @@ B   B:3:4:B::/64 [20/0]
 B   B22::1/128 [20/0]
      via FE80::A8BB:CCFF:FE00:E31, Ethernet1/2
 
-	ping b55::1
-	ping b44::1
+	ping b55::1               
+	ping b44::1		   
 	ping b33::1
 	ping b22::1
 	ping 8:8:8:8::8888
@@ -900,7 +900,7 @@ B   B22::1/128 [20/0]
 
 	!!!mejo wait mga 1 min. kasi 	may mga states na dadaan pa
 	!!!Down,Attempt,Init,2-Way,Exstart,Exchange,Loading,Full. (sh ip ospf nei)
-	!!! ping 2026::34:2 sa R1, hindi ma-ping kanina... lusot na now :)
+	!!! ping 2026::34:2 sa R3, hindi ma-ping kanina... lusot na now :)  kahit hanggang kay R1 pa na dulo ng OSPF route.
 
 R1#ping 2026::34:2 
 Type escape sequence to abort.
@@ -940,7 +940,7 @@ ipv6 router ospf 6
 OSPFv3 to BGP:
 R1 pa rin:
 config t
-router bgp 1
+router bgp 100
   address-family ipv6 unicast
    redistribute ospf 6 match internal external 1 external 2
 
