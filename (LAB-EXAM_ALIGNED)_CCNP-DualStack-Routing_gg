@@ -289,8 +289,8 @@ sh ip bgp summary
 
 ping 8.8.8.8
 !this should reply... if not yet, wait for few seconds at baka hindi pa kumpleto NOKU States (NOTIFICATION, OPEN, KEEP ALIVE, UPDATE)
-!or their ARPs, pwede rin go to ISP2 and ping 8.8.8.8 there, and then go back here in R1 ping again.
-
+!or their ARPs, pwede rin go to ISP2 (or even sa ISP4 mismo) and ping 8.8.8.8 there, and then go back here in R1 ping again.
+!magpi-ping at mapi-ping yan down to entire BGP Zone (I4 to R1) provided na hindi ka sumablay sa scripts :)
 
 
 
