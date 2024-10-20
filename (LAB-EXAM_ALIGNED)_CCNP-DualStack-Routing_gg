@@ -1,5 +1,5 @@
 git clone https://github.com/ggenergg/RST-DualStackRouting (medyo... LAB EXAM ALIGNED)
-
+/* Super Clean, Very-Virgin RSTHayup VM is recommended */
 
 //if walang IP address sa VM-RSTHayup
 rm -rf /etc/udev/rule (pindot tab)/70 (pindot tab)
@@ -7,7 +7,7 @@ rm -rf /etc/udev/rule (pindot tab)/70 (pindot tab)
 
 @@@ CONFIGURE RST AGAIN.
 
-D1:
+D1:		//Bigay-IP Matic
 CONFIG T
 ip dhcp excluded-add 10.2.1.1 10.2.1.99
 ip dhcp excluded-add 10.2.1.200 10.2.1.254
@@ -57,7 +57,7 @@ config t
 int e1/0
  ip add dhcp
  no shut
-do sh ip int br | ex una	!ulitin pa if wala pa, minsan mejo matagal dahil kay DORA
+do sh ip int br | ex una	!ulitin pa if wala pa, minsan mejo matagal dahil kay DORA (Discover, Offer, Request, Acknowlegde)
 
 Interface                  IP-Address      OK? Method Status                Protocol
 Ethernet1/0                10.2.1.201      YES DHCP   up                    up
@@ -120,7 +120,7 @@ router eigrp 100
  network 192.168.1.128 0.0.0.31
 end
 
-or NEXUS-like
+or NEXUS-like / 64 bit
 
 conf t
 	router eigrp CCNPLEVEL
@@ -143,7 +143,7 @@ router eigrp 100
 end
 show ip eigrp neighbor
 
-or NEXUS-like
+or NEXUS-like / 64 bit
 
 conf t
 	router eigrp CCNPLEVEL
