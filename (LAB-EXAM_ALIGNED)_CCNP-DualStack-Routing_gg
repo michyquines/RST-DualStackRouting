@@ -945,7 +945,7 @@ router bgp 100
    redistribute ospf 6 match internal external 1 external 2
 
 
-!!!puntanan yung kadulu-duluhan which is R4, dapat tagos ang ping b55::1
+!!!puntanan yung kadulu-duluhan which is R4, dapat tagos ang ping b55::1 or 8:8:8:8::8888
 !!! sr6 ospf kay R4 --->  andami na routes especially OE2 compare sa kanina na 5 OI lang
 !!! ping and traceroute 8:8:8:8::8888
   
@@ -1166,7 +1166,7 @@ Success rate is 0 percent (0/5)
 
 !!!ping 8:8:8:8::8888  ... waley rin ping kahit kay P1, D1, and D2... BUT in R4 ping works!!! BAKET!!!???
 
-!... di pa Ubra kasi matapobre pa rin si EIGRP sa IPv6 ... may redistribution malupet pa rin.
+!... di pa Ubra kasi matapobre pa rin si EIGRP sa IPv6 ... may redistribution v6 malupet pa rin.
 
 
 R4:
@@ -1202,7 +1202,7 @@ EX  B22::1/128 [170/332800]
 EX  B33::1/128 [170/332800]
 EX  B44::1/128 [170/332800]
 EX  B55::1/128 [170/332800]
-EX  2001:4860:4860::/64 [170/332800]
+EX  8:8:8:8::8888/128 [170/332800]
 EX  2026::1:0/122 [170/332800]
 EX  2026::12:0/122 [170/332800]
 EX  2026::34:0/122 [170/332800]
@@ -1211,10 +1211,10 @@ EX  FEC0:2::2/128 [170/332800]
 EX  FEC0:3::3/128 [170/332800]
 
 
-!!!ping 8:8:8:8::8888   ---> D1 lang ang makaka-ping, wala pa sa P1/P2
+!!!ping 8:8:8:8::8888   ---> D1 lang ang makaka-ping, wala pa sa P1
 
 
-!!! so far routes... B pasok sa O... O pasok sa D... wala pang STATIC/Default Route sa P1/P2
+!!! so far routes... BGP pasok sa OSPF... OSPF pasok sa D'EIGRP... wala pang STATIC/Default Route sa P1/P2
 
 
 ####################################################################################################
@@ -1237,7 +1237,7 @@ ping 8.8.8.8
 
 P1#ping 8:8:8:8::8888
 Type escape sequence to abort.
-Sending 5, 100-byte ICMP Echos to 2001:4860:4860::8888, timeout is 2 seconds:
+Sending 5, 100-byte ICMP Echos to 8:8:8:8::8888, timeout is 2 seconds:
 !!!!!
 Success rate is 100 percent (5/5), round-trip min/avg/max = 2/2/2 ms
 P1#ping 8.8.8.8
