@@ -155,7 +155,7 @@ conf t
 		end
 	sh ip eigrp nei
 
-R4:
+R4:				!sh ip route connected   (to show the Connected sa EIGRP wildcard kalyes)
 config t
 router eigrp 100
  no auto-summary
@@ -293,6 +293,8 @@ ping 8.8.8.8
 !Si R2 ba lulusot si 8.8.8.8 like R1...?   NAH!!!
 
 
+
+
 RE-Task9.5: Redistribution Skills for CCNP  (by default, hindi agad bati ang different routing protocols)
 
 R1:
@@ -335,6 +337,7 @@ end
 	!kapag pinoy lalabas ng bansa, ang daming hiningi, pati school/college diploma hinihingi.
 	!the redistribute parameters can be viewd via "show int e1/0 (or e1/1, e0/0, etc...) "
 
+@D1:
 sh ip route | inc D     !dapat may "D EX" na (EIGRP external routes)
 
 !D1#ping 8.8.8.8
