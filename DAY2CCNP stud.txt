@@ -21,12 +21,12 @@ end
 
 D2:
 CONFIG T
-ip dhcp excluded-add 10.2.1.1 10.2.1.199
-ip dhcp excluded-add 10.2.1.250 10.2.1.254
+____________________________________________	!wag bigay 1-199
+____________________________________________	!wag bigay 250-254
 !
-ip dhcp pool vlan10
-  network 10.2.1.0 255.255.255.0
-  default-router 10.2.1.254
+___________________				   !gawa pool for vlan 10
+  ______________________________________________   !network ni vlan 10
+  __________________________			   !default gateway ni vlan 10
 end
 !
 
@@ -48,21 +48,21 @@ int e1/0
 p1:
 config t
 int e0/0
- ip add dhcp
+ _____________________ (how to get IP via DHCP)
  no shut
 
 
 p2:
 config t
 int e1/0
- ip add dhcp
+ _____________________ (how to get IP via DHCP)
  no shut
 do sh ip int br | ex una
 
 Interface                  IP-Address      OK? Method Status                Protocol
 Ethernet1/0                10.2.1.201      YES DHCP   up                    up
 
-
+!ulitin pa if wala pa, minsan mejo matagal DHCP states nya dahil kay DORA
 
 
 TASK9.1: Make the Most Expensive Switch: be the Root Bridge
@@ -157,10 +157,10 @@ conf t
 
 R4:
 config t
-router eigrp 100
+router _____ ___
  no auto-summary
- network 10.1.4.8 0.0.0.3
- network 10.1.4.4 0.0.0.3
+ _______ __._._._ _._._._
+ _______ __._._._ _._._._
  end
 
 
@@ -182,8 +182,8 @@ end
 R2:
 config t
 router ospf 1
-network 10.1.1.4 0.0.0.3 area 0
-network 10.1.1.0 0.0.0.3 area 12
+ _______ __._._._ _._._._ ____ _
+ _______ __._._._ _._._._ ____ _
 end
 
 
@@ -200,13 +200,13 @@ R1 BGP:
 config t
 router bgp 1
  bgp log-neighbor-changes
- neighbor 208.8.8.4 remote-as 45
- neighbor 207.7.7.2 remote-as 2
- neighbor 209.9.9.3 remote-as 3
+ n_______ __._._._ remote-as __
+ n_______ __._._._ remote-as _
+ n_______ __._._._ remote-as _
  network 10.0.0.0 Mask 255.255.255.252
- network 207.7.7.0
- network 208.8.8.0
- network 209.9.9.0
+ n______ __._._._ ____ ___.___.___._
+ n______ __._._._ ____ ___.___.___._
+ n______ __._._._ ____ ___.___.___._
 end
 
 
@@ -217,7 +217,7 @@ bgp log-neighbor-changes
 neighbor 24.2.4.2 remote-as 2
 neighbor 45.4.5.5 remote-as 45
 neighbor 208.8.8.1 remote-as 1
-network 208.8.8.0
+network 208.8.8.0 mask 255.255.255.0
 network 24.2.4.0 mask 255.255.255.0
 network 44.44.44.44 mask 255.255.255.255
 network 45.4.5.0 mask 255.255.255.0
@@ -237,8 +237,8 @@ n_______ __._._._ ______-__ __
 n_______ __._._._ ______-__ __
 n_______ __._._._ remote-as _
 n_______ ___._._._ ______-__ _
-n______ ___._._._ mask ___.___.___._
-n______ __.__.__.__ mask 255.255.255.255
+network ___._._._ mask ___.___.___._
+n______ __.__.__.__ ____ ___.___.___._
 n______ __._._._ ____ ___.___.___._
 n______ __._._._ ____ ___.___.___._
 n______ __._._._ ____ ___.___.___._
@@ -256,7 +256,7 @@ bgp log-neighbor-changes
 neighbor 32.3.2.2 remote-as 2
 neighbor 35.3.5.5 remote-as 45
 neighbor 209.9.9.1 remote-as 1
-network 209.9.9.0
+network 209.9.9.0 mask 255.255.255.0
 network 32.3.2.0 mask 255.255.255.0
 network 33.33.33.33 mask 255.255.255.255
 network 35.3.5.0 mask 255.255.255.0
@@ -273,44 +273,27 @@ int lo 8
  ip add 8.8.8.8 255.255.255.255
 router bgp 45
  bgp log-neighbor-changes
- neighbor 25.2.5.2 remote-as 2
- neighbor 35.3.5.3 remote-as 3
- neighbor 45.4.5.4 remote-as 45
+ ________ __._._._ ______-__ _
+ ________ __._._._ ______-__ _
+ ________ __._._._ ______-__ __
  network 8.8.8.8 mask 255.255.255.255
  network 55.55.55.55 mask 255.255.255.255
- network 25.2.5.0 mask 255.255.255.0
- network 35.3.5.0 mask 255.255.255.0
- network 45.4.5.0 mask 255.255.255.0
+ network __._._._ mask ___.___.___._
+ network __._._._ mask ___.___.___._
+ network __._._._ mask ___.___.___._
 end
 
-@R1
+@R1 (lalo na kay I2)
 sh ip bgp summary
 !there should be oras, if merong never... check the config of both peer routers (sh run | sec bgp)
 
 ping 8.8.8.8
-!this should reply... if not yet, wait for few seconds at baka hindi pa kumpleto NOKU States or their ARPs, 
-!pwede rin go to ISP2 and ping 8.8.8.8 there, and then go back here in R1 ping again.
+!this should reply... if not yet, wait for few seconds at baka hindi pa kumpleto NOKU States (Notification, Open, Keep Alive, Update)
+!or their ARPs, pwede rin go to ISP2 and ping 8.8.8.8 there, and then go back here in R1 ping again.
+!Si R2 ba lulusot si 8.8.8.8 like R1...?   NAH!!!
 
 
-
-
-
-RE-Task9.5: Redistribution Skills for CCNP (similarly looks like our PH Immigration)
-R4:
-	!ipasok ang eigrp sa mundo ng ospf 
-config t
-router ospf 1
-  redistribute eigrp 100 subnets
-  exit
-	!so easy parang banyaga pasok pinas, wala nang masyadong hinihingi kahit drug lord pa yung foreigner
-
-	!ipasok ang ospf sa mundo ng eigrp
-router eigrp 100
-  redistribute ospf 1 metric 1544 2000 255 1 1500
-end
-	!kapag pinoy lalabas ng bansa, ang daming hiningi, pati school/college diploma hinihingi.
-	!the redistribute parameters can be viewd via "show int e1/0 (or e1/1, e0/0, etc...) "
-
+RE-Task9.5: Redistribution Skills for CCNP  (by default, hindi agad bati ang different routing protocols)
 
 R1:
 	!redistrubte internet routes to ospf from BGP, and they always luv each other <3
@@ -331,7 +314,28 @@ ping 8.8.8.8
 !!!!!!
 !Success rate is 100 percent (5/5), round-trip min/avg/max = 1/1/1 ms
 
-!If lusot kay R2... lusot na kay R4, until kay D1/D2...
+!If lusot kay R2... lusot na kaya R4? and until kay D1/D2 kaya ba...???
+
+
+
+R4:
+	!ipasok ang eigrp sa mundo ng ospf 
+config t
+router ospf 1
+  redistribute eigrp 100 subnets
+  exit
+	!so easy parang banyaga pasok pinas, wala nang masyadong hinihingi kahit drug lord pa yung foreigner
+
+
+
+	!ipasok ang ospf sa mundo ng eigrp (similarly looks like our PH Immigration)
+router eigrp 100	
+  redistribute ospf 1 metric 1544 2000 255 1 1500
+end
+	!kapag pinoy lalabas ng bansa, ang daming hiningi, pati school/college diploma hinihingi.
+	!the redistribute parameters can be viewd via "show int e1/0 (or e1/1, e0/0, etc...) "
+
+sh ip route | inc D     !dapat may "D EX" na (EIGRP external routes)
 
 !D1#ping 8.8.8.8
 !Type escape sequence to abort.
