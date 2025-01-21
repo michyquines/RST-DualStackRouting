@@ -33,16 +33,16 @@ end
 
 A1:
 config t
-int e0/0
- switchport mode access
- switchport access vlan 10
+_____ ___ 				!assign e0/0 via vlan 10
+ __________ ____ ______ 
+ _________ ______ ____ __
 
 
 A2:
-config t
-int e1/0
- switchport mode access
- switchport access vlan 10
+_____ ___ 				!assign e1/0 via vlan 10
+ __________ ____ ______ 
+ _________ ______ ____ __
+
 
 
 p1:
@@ -79,8 +79,8 @@ Int Range e0/0-3, e1/2-3
   switchport mode trunk
   exit
 
-vlan 2
-name CHECKMEEEE
+____ _			!create vlan2 named CHECKMEEEE	
+____ _________
 end
 
 
@@ -88,7 +88,7 @@ D2:
 config t
 no logging console
 no ip domain-lookup
-spanning-tree vlan 1-100 root secondary
+_____________ ____ _____ ____ _________ 	!make this as secondary root
 end
 
 !verify if VLANS are propagating
@@ -146,8 +146,8 @@ show ip eigrp neighbor
 or NEXUS-like
 
 conf t
-	router eigrp CCNPLEVEL
-		address-family ipv4 unicast autonomous-system 100
+	_____ _____ _________						!configure an EIGRP named CCNPLEVEL
+		a____________________________________________100	!set its address family v4 with AS 100
 		network 10.1.4.10 0.0.0.0
 		network 10.2.1.2 0.0.0.0
 		network 10.2.2.2 0.0.0.0
