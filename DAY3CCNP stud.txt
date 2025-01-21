@@ -147,19 +147,19 @@ or NEXUS-like
 
 conf t
 	_____ _____ _________						!configure an EIGRP named CCNPLEVEL
-		a____________________________________________100	!set its address family v4 with AS 100
-		network 10.1.4.10 0.0.0.0
-		network 10.2.1.2 0.0.0.0
-		network 10.2.2.2 0.0.0.0
-		network 192.168.1.130 0.0.0.0
+		____________________________________________	!set its address family v4 with AS 100
+		_______ __._._.__ _._._._	!advertise e1/1 IP with wildcard/32
+		_______ __._._.__ _._._._	!advertise D2 vlan10 with wildcard/32
+		_______ __._._.__ _._._._	!advertise D2 vlan20 with wildcard/32
+		_______ ___.___._.___ _._._._	!advertise D2 vlan200  with wildcard/32
 		end
 	sh ip eigrp nei
 
 R4:
 config t
-router _____ ___
+router _____ ___ 		
  no auto-summary
- _______ __._._._ _._._._
+ _______ __._._._ _._._._	
  _______ __._._._ _._._._
  end
 
@@ -190,7 +190,7 @@ end
 R1:
 config t
 router ospf 1
-network 10.1.1.0 0.0.0.3 area 12
+_______ __._._._ _._._._ ____ _
 end
 
 
@@ -444,15 +444,15 @@ IPV6 ADDRESSING FOR THE ISP'S
 			
 @ISP2
 	config t
-		ipv6 unicast-routing
+		____ ______________
 		int e0/2
-			ipv6 add b:2:4:b::2/64
+			____ ____ __________/__
 		int e1/1
-			ipv6 add b:2:1:b::2/64
+			____ ____ __________/__
 		int e1/3
-			ipv6 add b:1:22:b::2/64
+			____ ____ __________/__
 		int e1/2
-			ipv6 add b:1:2:b::2/64
+			____ ____ __________/__
 			end
 
 @ISP1
@@ -1579,7 +1579,7 @@ conf t
 	int e1/1
 	 shut
 	  do clear ip bgp * soft	!This is to send new NOK Packets (Only tie breaker is router id)
-	  do sh ip bgp !Dinaan yung packet sa 207
+	  do sh ip bgp 			!Dinaan yung packet sa 207
 	  no shut
 	  do clear ip bgp * soft
 	  do sh ip bgp
