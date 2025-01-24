@@ -2347,203 +2347,654 @@ ____________________________________
 ____________________________________
 
 end
-			end
-
-
-SLA: 
-using cisco IP SLA. the performance of the network can be monitored.
-this can be performed w/o deploying a physical probe. A router can be
-configured to send a generated packet to the destination device and once
-the destination device receives this packet, the device will respond with
-time-stamp info. for the source so that the source can make the calculation
-metric.
-
-How to configure IP SLA:
-
-STEP 1: CREATE AN IP SLA
-	no ip sla 4
-	ip sla 4
-		icmp-echo 206.6.6.6 source-int e1/4
-		threshold 3000
-		time 3000
-		freq 3
-		ip sla sched 4 life forever start-time now
-____________________________________
-____________________________________
-____________________________________
-____________________________________
-____________________________________
-____________________________________
-____________________________________
-____________________________________
-
-STEP 2: CONFIGURE TRACKING
-	track 40 ip sla 4 reachability
-		delay down 1 up 1
-		end
-____________________________________
-____________________________________
-____________________________________
-____________________________________
-		
-STEP 3: BEST TO USE STATIC ROUTES!
-	ip route 0.0.0.0 0.0.0.0 206.6.6.6 40
-	
-____________________________________
-____________________________________
-____________________________________
-
-	
-STEP 4: CREATE A PROTOCOL BASED ROUTING.
-	route-map PBR permit 40
-		match ip add 12
-		set ip next-hop verify-availability 206.6.6.6 track 40
-		
-____________________________________
-____________________________________
-____________________________________
-____________________________________
-		
-STEP 5: USE NAT WITH PBR.
-	int e1/0
-		ip nat inside
-		ip policy route-map PBR
-	ip nat inside source route-map ISP4 int e1/2 overload
-		route-map ISP4 permit 40
-		match ip add 12
-		match int e1/2
-		end
-____________________________________
-____________________________________
-____________________________________
-____________________________________
-
 			
-R1: TO BE RETURNED!
-
-config t
-router bgp 1
- bgp log-neighbor-changes
- network 10.0.0.0 mask 255.255.255.252
- network 207.7.7.0
- network 208.8.8.0
- network 209.9.9.0
- neighbor 207.7.7.2 remote-as 2
- neighbor
- 208.8.8.4 remote-as 45
- neighbor 209.9.9.3 remote-as 3
-!
-
-r1:
-config t
-no router bgp 1
-!
-ip sla auto discovery
-!
-no ip sla 1
-ip sla 1
- icmp-echo 208.8.8.4 source-interface e1/1
- threshold 3000
- timeout 3000
- frequency 3
-ip sla schedule 1 life forever start-time now
-!
-no ip sla 2
-____________________________________
-____________________________________
-____________________________________
-____________________________________
-____________________________________
-____________________________________
-____________________________________
-____________________________________
-!
-no ip sla 3
-ip sla 3
- icmp-echo 209.9.9.3 source-interface e1/3
- threshold 3000
- timeout 3000
- frequency 3
-ip sla schedule 3 life forever start-time now
-!
-!
-track 10 ip sla 1 reachability
- delay down 1 up 1
-!
-____________________________________
-____________________________________
-____________________________________
-____________________________________
-!
-track 30 ip sla 3 reachability
- delay down 1 up 1
-!
-!
-ip route 55.55.55.55 255.255.255.255 208.8.8.4 track 10
-ip route 55.55.55.55 255.255.255.255 207.7.7.2 track 20
-ip route 55.55.55.55 255.255.255.255 209.9.9.3 30
-!
-ip route 0.0.0.0 0.0.0.0 208.8.8.4 track 10
-ip route 0.0.0.0 0.0.0.0 207.7.7.2 track 20
-ip route 0.0.0.0 0.0.0.0 209.9.9.3 30
-!
-!
-route-map PBR permit 10
- match ip address 10
- set ip next-hop verify-availability 208.8.8.4 1 track 10
-!
-route-map PBR permit 20
-____________________________________
-____________________________________
-____________________________________
-____________________________________
-!
-route-map PBR permit 30
- match ip address 12
- set ip next-hop verify-availability 209.9.9.3 3 track 30
-!
-access-list 8 permit any
-access-list 10 permit any
-access-list 11 permit any
-access-list 12 permit any
-!
-int e1/1
- ip nat outside
-int e1/2
- ip nat outside
-int e1/3
- ip nat outside
-int e1/0
- ip nat inside
- ip policy route-map PBR
-!
-ip nat inside source route-map ISP2 interface e1/2 overload
-route-map ISP2 permit 10
- match ip address 8
- match interface e1/2
-!
-ip nat inside source route-map ISP1 interface e1/1 overload
-____________________________________
-____________________________________
-____________________________________
-____________________________________
-!
-ip nat inside source route-map ISP3 interface e1/3 overload
-route-map ISP3 permit 10
- match ip address 8
- match interface e1/3
-!
-show track 13
-
-show route-map
-
-show ip sla statistics
-
-show ip sla configuration
 
 
-######################################################			
-			
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 R1:
@@ -2847,3 +3298,448 @@ R1#
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+SLA: 
+using cisco IP SLA. the performance of the network can be monitored.
+this can be performed w/o deploying a physical probe. A router can be
+configured to send a generated packet to the destination device and once
+the destination device receives this packet, the device will respond with
+time-stamp info. for the source so that the source can make the calculation
+metric.
+
+How to configure IP SLA:
+
+STEP 1: CREATE AN IP SLA
+	no ip sla 4
+	ip sla 4
+		icmp-echo 206.6.6.6 source-int e1/4
+		threshold 3000
+		time 3000
+		freq 3
+		ip sla sched 4 life forever start-time now
+____________________________________
+____________________________________
+____________________________________
+____________________________________
+____________________________________
+____________________________________
+____________________________________
+____________________________________
+
+STEP 2: CONFIGURE TRACKING
+	track 40 ip sla 4 reachability
+		delay down 1 up 1
+		end
+____________________________________
+____________________________________
+____________________________________
+____________________________________
+		
+STEP 3: BEST TO USE STATIC ROUTES!
+	ip route 0.0.0.0 0.0.0.0 206.6.6.6 40
+	
+____________________________________
+____________________________________
+____________________________________
+
+	
+STEP 4: CREATE A PROTOCOL BASED ROUTING.
+	route-map PBR permit 40
+		match ip add 12
+		set ip next-hop verify-availability 206.6.6.6 track 40
+		
+____________________________________
+____________________________________
+____________________________________
+____________________________________
+		
+STEP 5: USE NAT WITH PBR.
+	int e1/0
+		ip nat inside
+		ip policy route-map PBR
+	ip nat inside source route-map ISP4 int e1/2 overload
+		route-map ISP4 permit 40
+		match ip add 12
+		match int e1/2
+		end
+____________________________________
+____________________________________
+____________________________________
+____________________________________
+
+			
+R1: TO BE RETURNED!
+
+config t
+router bgp 1
+ bgp log-neighbor-changes
+ network 10.0.0.0 mask 255.255.255.252
+ network 207.7.7.0
+ network 208.8.8.0
+ network 209.9.9.0
+ neighbor 207.7.7.2 remote-as 2
+ neighbor
+ 208.8.8.4 remote-as 45
+ neighbor 209.9.9.3 remote-as 3
+!
+
+r1:
+config t
+no router bgp 1
+!
+ip sla auto discovery
+!
+no ip sla 1
+ip sla 1
+ icmp-echo 208.8.8.4 source-interface e1/1
+ threshold 3000
+ timeout 3000
+ frequency 3
+ip sla schedule 1 life forever start-time now
+!
+no ip sla 2
+____________________________________
+____________________________________
+____________________________________
+____________________________________
+____________________________________
+____________________________________
+____________________________________
+____________________________________
+!
+no ip sla 3
+ip sla 3
+ icmp-echo 209.9.9.3 source-interface e1/3
+ threshold 3000
+ timeout 3000
+ frequency 3
+ip sla schedule 3 life forever start-time now
+!
+!
+track 10 ip sla 1 reachability
+ delay down 1 up 1
+!
+____________________________________
+____________________________________
+____________________________________
+____________________________________
+!
+track 30 ip sla 3 reachability
+ delay down 1 up 1
+!
+!
+ip route 55.55.55.55 255.255.255.255 208.8.8.4 track 10
+ip route 55.55.55.55 255.255.255.255 207.7.7.2 track 20
+ip route 55.55.55.55 255.255.255.255 209.9.9.3 30
+!
+ip route 0.0.0.0 0.0.0.0 208.8.8.4 track 10
+ip route 0.0.0.0 0.0.0.0 207.7.7.2 track 20
+ip route 0.0.0.0 0.0.0.0 209.9.9.3 30
+!
+!
+route-map PBR permit 10
+ match ip address 10
+ set ip next-hop verify-availability 208.8.8.4 1 track 10
+!
+route-map PBR permit 20
+____________________________________
+____________________________________
+____________________________________
+____________________________________
+!
+route-map PBR permit 30
+ match ip address 12
+ set ip next-hop verify-availability 209.9.9.3 3 track 30
+!
+access-list 8 permit any
+access-list 10 permit any
+access-list 11 permit any
+access-list 12 permit any
+!
+int e1/1
+ ip nat outside
+int e1/2
+ ip nat outside
+int e1/3
+ ip nat outside
+int e1/0
+ ip nat inside
+ ip policy route-map PBR
+!
+ip nat inside source route-map ISP2 interface e1/2 overload
+route-map ISP2 permit 10
+ match ip address 8
+ match interface e1/2
+!
+ip nat inside source route-map ISP1 interface e1/1 overload
+____________________________________
+____________________________________
+____________________________________
+____________________________________
+!
+ip nat inside source route-map ISP3 interface e1/3 overload
+route-map ISP3 permit 10
+ match ip address 8
+ match interface e1/3
+!
+show track 13
+
+show route-map
+
+show ip sla statistics
+
+show ip sla configuration
+
+
+######################################################			
