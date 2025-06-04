@@ -48,14 +48,14 @@ _____ ___ 				!assign e1/0 via vlan 10
 p1:
 config t
 int e0/0
- _____________________ (how to get IP via DHCP)
+ ip add dhcp
  no shut
 
 
 p2:
 config t
 int e1/0
- _____________________ (how to get IP via DHCP)
+ ip add dhcp
  no shut
 do sh ip int br | ex una
 
@@ -267,7 +267,7 @@ end
 
 
 
-Isp4:
+Isp4: (GoogleDNS)
 config t
 int lo 8
  ip add 8.8.8.8 255.255.255.255
@@ -413,7 +413,7 @@ end
 !It may be needed to review the basics and rulings of IPv6
 
 
-IPV6 ADDRESSING FOR THE ISP'S
+IPV6 ADDRESSING FOR THE ISP'S		(We can bypass all of these addressing configs for the new RSTv4 unless you are using the old one)!!!!!
 @ISP4
 	conf t
 		ipv6 unicast-routing
@@ -430,7 +430,7 @@ IPV6 ADDRESSING FOR THE ISP'S
 !so far wala sa exam about identifying the definite IPv6 lab
 
 
-@ISP3
+@ISP3		!!!!!(We can bypass all of these addressing configs for the new RSTv4)!!!!!
 	config t
 		ipv6 unicast-routing
 		int e1/1
@@ -442,7 +442,7 @@ IPV6 ADDRESSING FOR THE ISP'S
 			end
 
 			
-@ISP2
+@ISP2		!!!!!(We can bypass all of these addressing configs for the new RSTv4)!!!!!
 	config t
 		____ ______________
 		int e0/2
@@ -455,7 +455,7 @@ IPV6 ADDRESSING FOR THE ISP'S
 			____ ____ __________/__
 			end
 
-@ISP1
+@ISP1		!!!!!(We can bypass all of these addressing configs for the new RSTv4)!!!!!
 	config t
 		ipv6 unicast-routing
 		int e1/2
@@ -466,7 +466,7 @@ IPV6 ADDRESSING FOR THE ISP'S
 			ipv6 add b:1:11:b::4/64
 			end
 
-@R1
+@R1		!!!!!(We can bypass all of these addressing configs for the new RSTv4)!!!!!
 	config t
 		ipv6 unicast-routing
 		int e1/3
@@ -730,7 +730,7 @@ B   B22::1/128 [20/0]
 !!!guhit tunnel bet. r4 (EIGRP) to R3(OSPF) (a.k.a tunnel34)
 
 
-@R1
+@R1			!!!!!(We can bypass all of these addressing configs for the new RSTv4)!!!!!
 	conf t
 		ipv6 unicast-routing
 		interface Loopback1
@@ -743,7 +743,7 @@ B   B22::1/128 [20/0]
 
 
 
-@R2
+@R2			!!!!!(We can bypass all of these addressing configs for the new RSTv4)!!!!!
 	conf t
 		ipv6 unicast-routing
 		interface Loopback2
@@ -759,7 +759,7 @@ B   B22::1/128 [20/0]
 
 
 
-@R3
+@R3			!!!!!(We can bypass all of these addressing configs for the new RSTv4)!!!!!
 	conf t
 		i___ _______-______g
 		interface _________
@@ -781,7 +781,7 @@ B   B22::1/128 [20/0]
 
 
 
-@R4
+@R4			!!!!!(We can bypass all of these addressing configs for the new RSTv4)!!!!!
 	conf t
 		ipv6 unicast-routing
 		interface Loopback4
@@ -957,7 +957,7 @@ router bgp 1
  ####################################################################################################
 ~~~~~~~~~~~~~~~~~~~~~~~CONFIGURE INTERNAL NETWORK  IPV6 ADDRESSING~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-@R4   !!!IPv6 Addressing sa Internal for EIGRP
+@R4   !!!IPv6 Addressing sa Internal for EIGRP		!!!!!(We can bypass all of these addressing configs for the new RSTv4)!!!!!
 	!!! baka kulang yung topology D1 to R4 kalye 10:1:4:14::4/64 :)
 	!!! baka kulang rin yung topology D2 to R4 kalye 10:1:4:24::4/64 :)
 
@@ -968,7 +968,7 @@ router bgp 1
 			ipv6 add 10:1:4:24::4/64
 			end
 
-@D1
+@D1		!!!!!(We can bypass all of these addressing configs for the new RSTv4)!!!!!
 	conf t
 		ipv6 unicast-routing
 		interface Loopback1
@@ -994,7 +994,7 @@ router bgp 1
 
 
 
-@D2
+@D2		!!!!!(We can bypass all of these addressing configs for the new RSTv4)!!!!!
 	conf t
 		ipv6 unicast-routing
 		interface Loopback2
