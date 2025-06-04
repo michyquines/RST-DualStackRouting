@@ -419,7 +419,7 @@ IPV6 ADDRESSING FOR THE ISP'S		(We can bypass all of these addressing configs fo
 		ipv6 unicast-routing
 		int Lo8
                         ipv6 add 2001:4860:4860::8888/128	
-			   !eto si google dns v6
+			   !eto si google dns v6, NEED TO ADD THIS KASI HINDI PA INCLUDED SA NEW RSTv4
 		int e0/1
 			ipv6 add b:1:4:b::5/64
 		int e0/2
@@ -499,7 +499,7 @@ IPV6 ADDRESSING FOR THE ISP'S		(We can bypass all of these addressing configs fo
 	!!! re-write sa topology yung mga ASes ng ISP's
 
 				~~~~~~~~~~~~~~~~~~~~~~~~~IPV6 BGP Configuration~~~~~~~~~~~~~~~~~~~~~~~
-@ISP4		!!!similar yung config from ipv4 but with some changes.
+@ISP4  (GoogleDNS)		!!!similar yung config from ipv4 but with some changes.
 	conf t
 	ipv6 unicast-routing
 	int lo4
@@ -590,21 +590,21 @@ IPV6 ADDRESSING FOR THE ISP'S		(We can bypass all of these addressing configs fo
 
 
 
-@R1  !!!! hold here, blank sa kanila :) 
+@R1  
 	conf t
 		ipv6 unicast-routing
 		router bgp 1
-			n_____ _______::_ r________ __
-			n_____ _______::_ r________ __
-			n_____ _______::_ r________ __
-			a_____________ ___6
-				neigh __________ _______e
-				neigh __________ _______e
-				neigh __________ _______e
+			neigh b:1:33:b::3 remote-as 3
+			neigh b:1:22:b::2 remote-as 2
+			neigh b:1:11:b::4 remote-as 45
+			address-family ipv6
+				neigh b:1:33:b::3 activate
+				neigh b:1:22:b::2 activate
+				neigh b:1:11:b::4 activate
 				network FEC0:1::/122    !loopback ni R1 v6
-				network _________/__
-				network _________/__
-				network _________/__
+				network b:1:33:b::/64
+				network b:1:22:b::/64
+				network b:1:11:b::/64
 				end
 
 
@@ -759,57 +759,57 @@ B   B22::1/128 [20/0]
 
 
 
-@R3			!!!!!(We can bypass all of these addressing configs for the new RSTv4)!!!!!
-	conf t
-		i___ _______-______g
-		interface _________
-			description Test I/F for OSPFv2 & OSPFv3 Routing
-			ip address _._._._ ___.___.___.255
-			ipv6 address ____:_::_/122
-		interface Tunnel34
-			no ip address
-			ipv6 address 2026::34:1/122
-			tunnel source lo3
-			tunnel destination _._._._
-			tunnel mode ipv6ip
-		int e1/1
-			ipv6 address ____::_:_/___
-			end
-
-
-
-
-
-
-@R4			!!!!!(We can bypass all of these addressing configs for the new RSTv4)!!!!!
+@R3			!!!!!NEED TO ADD THESE LINES, OTHERWISE ROUTING WILL BE INVALID LATER (NOT READY FOR OSPFv3 INVALID MESSAGE)
 	conf t
 		ipv6 unicast-routing
-		interface Loopback4
+		interface Loopback3
 			description Test I/F for OSPFv2 & OSPFv3 Routing
-			ip address 4.4.4.4 255.255.255.255
-			ipv6 address FEC0::4:4/122
-		interface e1/0
-			description L3 Link to DSW1
-			ip address 10.1.4.5 255.255.255.252
-			ipv6 address 2026::2:1/122 
-		interface e1/1
-			description L3 Link to DSW2 fa0/14
-			ip address 10.1.4.9 255.255.255.252
-		interface Loopback14
-			description Test I/F for RIPng Routing
-			no ip address
-			ipv6 address FEC0::14:4/122
-		interface Loopback21
-			description Test I/F for EIGRPv4 Routing & IP(v4) Helper Loopback I/F
-			ip address 10.1.21.129 255.255.255.224
+			ip address 3.3.3.3 255.255.255.255
+			ipv6 address FEC0:3::3/122
 		interface Tunnel34
-	    !creating a tunnel for the ipv6 connection of router 3 and router 4
 			no ip address
-			ipv6 address _____::__:__/122
-			tunnel source ____
-			tunnel destination ______.3
+		!!!*since hindi ready si ISP (from R4) sa ipv6, may need na ipv4 na pingable from R4 kay R3
+		!!!*tunneling requires source and destination
+			ipv6 address 2026::34:1/122
+			tunnel source lo3
+			tunnel destination 4.4.4.4
 			tunnel mode ipv6ip
+		int e1/1
+			ipv6 address 2026::1:2/122
 			end
+
+
+
+
+@R4			!!!!!NEED TO ADD THESE LINES, OTHERWISE ROUTING WILL BE INVALID LATER (NOT READY FOR OSPFv3 INVALID MESSAGE)
+		conf t
+			ipv6 unicast-routing
+			interface Loopback4
+				description Test I/F for OSPFv2 & OSPFv3 Routing
+				ip address 4.4.4.4 255.255.255.255
+				ipv6 address FEC0::4:4/122
+			interface e1/0
+				description L3 Link to DSW1
+				ip address 10.1.4.5 255.255.255.252
+				ipv6 address 2026::2:1/122 
+			interface e1/1
+				description L3 Link to DSW2 fa0/14
+				ip address 10.1.4.9 255.255.255.252
+			interface Loopback14
+				description Test I/F for RIPng Routing
+				no ip address
+				ipv6 address FEC0::14:4/122
+			interface Loopback21
+				description Test I/F for EIGRPv4 Routing & IP(v4) Helper Loopback I/F
+				ip address 10.1.21.129 255.255.255.224
+			interface Tunnel34
+		    !creating a tunnel for the ipv6 connection of router 3 and router 4
+				no ip address
+				ipv6 address 2026::34:2/122
+				tunnel source lo4
+				tunnel destination 3.3.3.3
+				tunnel mode ipv6ip
+				end
 			
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 ##################################
@@ -835,14 +835,14 @@ B   B22::1/128 [20/0]
 
 @R2
 	conf t
-		i___ ______ ____ 6
-			______-__ _._._.2
+		ipv6 router ospf 6
+			router-id 2.2.2.2
 		int lo2
 			ipv6 ospf 6 area 0
-		int __2
+		int e1/1
 			ipv6 ospf 6 area 0
-		int ___2
-			ipv6 ospf 6 area __
+		int e1/2
+			ipv6 ospf 6 area 12
 			end
 
 
