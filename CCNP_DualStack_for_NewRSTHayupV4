@@ -267,7 +267,7 @@ end
 
 
 
-Isp4:
+Isp4 (GoogleDNS):
 config t
 int lo 8
  ip add 8.8.8.8 255.255.255.255
@@ -413,8 +413,8 @@ end
 !It may be needed to review the basics and rulings of IPv6
 !as of June 2024, meron daw lab na IPv6 Subnetting LAB sa CCNA, it is likely and suprisingly magkakaroon rin sa CCNP.
 
-!!!!!!IPV6 ADDRESSING FOR THE ISP'S  (We can bypass all of these addressing configs for the new RSTv4)!!!!!
-@ISP4
+!!!!!!IPV6 ADDRESSING FOR THE ISP'S  (We can bypass all of these addressing configs for the new RSTv4 unless you are using the old one)!!!!!
+@ISP4 (GoogleDNS)
 	conf t
 		ipv6 unicast-routing
 		int Lo8
@@ -479,7 +479,7 @@ end
                ! ###################
 	!!!before proceeding, punta sa mga ISPs at ping ang mga direct neighbors, confirm 4 pingings
 
-@ISP4
+@ISP4 (GoogleDNS)
 	ping b:3:4:b::3 !ISP3
 	ping b:2:4:b::2 !ISP2
 	ping b:1:4:b::4 !ISP1
@@ -499,7 +499,7 @@ end
 	!!! recall sa topology yung mga ASes ng ISP's
 
 				~~~~~~~~~~~~~~~~~~~~~~~~~IPV6 BGP Configuration~~~~~~~~~~~~~~~~~~~~~~~
-@ISP4		!!!similar yung config from ipv4 but with some changes.
+@ISP4 (GoogleDNS)		!!!similar yung config from ipv4 but with some changes.
 	conf t
 	ipv6 unicast-routing
 	int lo4
