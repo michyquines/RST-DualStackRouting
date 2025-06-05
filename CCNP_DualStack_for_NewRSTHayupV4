@@ -418,8 +418,8 @@ end
 	conf t
 		ipv6 unicast-routing
 		int Lo8
-                        ipv6 add 2001:4860:4860::8888/128	
-			   !eto si google dns v6
+                        ipv6 add 2001:4860:4860::8888/128	!eto si real google dns v6
+			ipv6 add 8:8:8:8::8888/128		!eto si panggap goggle dns v6 (pang alternate lang)
 		int e0/1
 			ipv6 add b:1:4:b::5/64
 		int e0/2
@@ -719,7 +719,7 @@ B   B22::1/128 [20/0]
 	ping b33::1
 	ping b22::1
 	ping 2001:4860:4860::8888
-
+	ping 8:8:8:8::8888		!(if hindi ma ping ito, you can fix it if you are a real CCNP guy)
 
 ############################################################################
 
