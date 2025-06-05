@@ -759,7 +759,7 @@ B   B22::1/128 [20/0]
 
 
 
-@R3  !!! OOOPPPPSSSIE... Blank again to them :)                    !!!!!(We can bypass all of these addressing configs for the new RSTv4)!!!!!
+@R3			!!!!!NEED TO ADD THESE LINES, OTHERWISE ROUTING WILL BE INVALID LATER (NOT READY FOR OSPFv3 INVALID MESSAGE)
 	conf t
 		ipv6 unicast-routing
 		interface Loopback3
@@ -781,7 +781,7 @@ B   B22::1/128 [20/0]
 
 
 
-@R4                    !!!!!(We can bypass all of these addressing configs for the new RSTv4)!!!!!
+@R4			!!!!!NEED TO ADD THESE LINES, OTHERWISE ROUTING WILL BE INVALID LATER (NOT READY FOR OSPFv3 INVALID MESSAGE)
 	conf t
 		ipv6 unicast-routing
 		interface Loopback4
