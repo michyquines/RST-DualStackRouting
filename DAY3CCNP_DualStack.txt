@@ -1114,7 +1114,7 @@ router bgp 1
 			ip address 10.1.4.6 255.255.255.252
 			ipv6 address 2026::2:2/122
 			ipv6 add 10:1:4:14::1/64
-		interface vlan 200
+		interface vlan 100
 			description IPv6 Link to DSW2
 			ipv6 address 2026::3:1/122
 			ipv6 add 192:168:1:1234::1/64
@@ -1136,7 +1136,7 @@ router bgp 1
 			ipv6 address FEC0::22:2/122
 		int e 1/1
 			ipv6 add 10:1:4:24::2/64
-		interface vlan 200
+		interface vlan 100
 			description IPv6 Link to DSW1
 			ipv6 address 2026::3:2/122
 			ipv6 add 192:168:1:1234::2/64
@@ -1186,7 +1186,7 @@ router bgp 1
 			ipv6 eigrp 10
 		int vlan 20
 			ipv6 eigrp 10
-		int vlan 200
+		int vlan 100
 			ipv6 eigrp 10
 			end
 			
@@ -1205,7 +1205,7 @@ router bgp 1
 			____ _____ _0
 		int vlan 20
 			____ e____ __
-		int vlan 200
+		int vlan 100
 			i___ _____ __
 			end
 			
