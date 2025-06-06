@@ -181,7 +181,7 @@ conf t
 int range e0/1,e0/2
 swi tr encap dot1q
 swi mode trunk
-swi trunk allowed vlan 1-99
+swi trunk allowed vlan 1-100
 channel-group 20 mode active
 channel-protocol lacp
 
@@ -189,7 +189,7 @@ channel-protocol lacp
 int range e0/0,e0/3
 swi tr encap dot1q
 swi mode trunk
-swi trunk allowed vlan 1-99
+swi trunk allowed vlan 1-100
 channel-group 25 mode active
 channel-protocol lacp
 end
