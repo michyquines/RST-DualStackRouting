@@ -97,6 +97,138 @@ sh vlan brief
 !there should be CHECKMEEEE
 
 
+TASK: ETHERCHANNEL/PORT-CHANNEL ALL THE TRUNKS (MUST BE MASTERED AS IT IS ONE OF THE POSSIBLE PRACTICAL LAB EXAMS)
+
+@D1
+!Po10 to A1
+conf t
+int range e0/1,e0/2
+swi tr encap dot1q
+swi mode trunk
+swi trunk allowed vlan 1-100
+channel-group 10 mode active
+channel-protocol lacp
+
+!Po20 to A2
+int range e0/0,e0/3
+swi tr encap dot1q
+swi mode trunk
+swi trunk allowed vlan 1-100
+channel-group 20 mode active
+channel-protocol lacp
+
+!Po30 to D2
+int range e1/2,e1/3
+swi tr encap dot1q
+swi mode trunk
+swi trunk allowed vlan 1-100
+channel-group 30 mode active
+channel-protocol lacp
+
+
+
+@D2
+!Po15 to A1
+conf t
+int range e0/1,e0/2
+swi tr encap dot1q
+swi mode trunk
+swi trunk allowed vlan 1-100
+channel-group 15 mode active
+channel-protocol lacp
+
+!Po25 to A2
+int range e0/0,e0/3
+swi tr encap dot1q
+swi mode trunk
+swi trunk allowed vlan 1-100
+channel-group 25 mode active
+channel-protocol lacp
+
+!Po30 to D1
+int range e1/2,e1/3
+swi tr encap dot1q
+swi mode trunk
+swi trunk allowed vlan 1-100
+channel-group 30 mode active
+channel-protocol lacp
+end
+
+
+@A1
+!Po10 to D1
+conf t
+int range e0/1,e0/2
+swi tr encap dot1q
+swi mode trunk
+swi trunk allowed vlan 1-100
+channel-group 10 mode active
+channel-protocol lacp
+
+!Po15 to D2
+int range e1/0,e0/3
+swi tr encap dot1q
+swi mode trunk
+swi trunk allowed vlan 1-100
+channel-group 15 mode active
+channel-protocol lacp
+end
+
+
+@A2
+!Po20 to D1
+conf t
+int range e0/1,e0/2
+swi tr encap dot1q
+swi mode trunk
+swi trunk allowed vlan 1-99
+channel-group 20 mode active
+channel-protocol lacp
+
+!Po25 to D2
+int range e0/0,e0/3
+swi tr encap dot1q
+swi mode trunk
+swi trunk allowed vlan 1-99
+channel-group 25 mode active
+channel-protocol lacp
+end
+
+
+
+@D1 for checking Port-Channels (must be all SU)
+
+D1#sh etherchannel summary
+:
+:
+Number of channel-groups in use: 3
+Number of aggregators:           3
+
+Group  Port-channel  Protocol    Ports
+------+-------------+-----------+-----------------------------------------------
+10     Po10(SU)        LACP      Et0/1(P)    Et0/2(P)    
+20     Po20(SU)        LACP      Et0/0(P)    Et0/3(P)    
+30     Po30(SU)        LACP      Et1/2(P)    Et1/3(P)
+
+
+
+
+@D2 for checking Port-Channels (must be all SU)
+
+D2#sh etherchannel summary
+:
+:
+Number of channel-groups in use: 3
+Number of aggregators:           3
+
+Group  Port-channel  Protocol    Ports
+------+-------------+-----------+-----------------------------------------------
+15     Po15(SU)        LACP      Et0/1(P)    Et0/2(P)    
+25     Po25(SU)        LACP      Et0/0(P)    Et0/3(P)    
+30     Po30(SU)        LACP      Et1/2(P)    Et1/3(P)
+
+
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
 
