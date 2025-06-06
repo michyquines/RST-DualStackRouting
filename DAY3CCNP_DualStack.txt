@@ -546,12 +546,12 @@ end
 
 
 IPV6 ADDRESSING FOR THE ISP'S		(We can bypass all of these addressing configs for the new RSTv4 unless you are using the old one)!!!!!
-@ISP4
+@ISP4			
 	conf t
 		ipv6 unicast-routing
-		int Lo8
-                        ipv6 add 2001:4860:4860::8888/128	
-			   !eto si google dns v6, NEED TO ADD THIS KASI HINDI PA INCLUDED SA NEW RSTv4
+		int Lo8		
+                        ipv6 add 2001:4860:4860::8888/128	!eto si real google dns v6 (wala pa sa new RSTv4 so need to append)
+			ipv6 add 8:8:8:8::8888/128		!eto si panggap goggle dns v6 (pang alternate lang, need to append rin)
 		int e0/1
 			ipv6 add b:1:4:b::5/64
 		int e0/2
