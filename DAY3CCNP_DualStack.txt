@@ -165,7 +165,7 @@ swi trunk allowed vlan 1-100
 channel-group 10 mode active
 channel-protocol lacp
 
-!Po15 to D2
+!Po15 to D2 (use SHOW CDP NEIGHBORS to determine ports)
 ___ _____ ____,___
 ___ ___ _____ _____
 ___ _____ _____
