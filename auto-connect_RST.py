@@ -1,3 +1,4 @@
+#This .PY Script is usable only in SecrureCRT App with separate Python3 Runtime installed.
 
 rst_ip = crt.Dialog.Prompt("What is your RST IPv4 Address? ")
 
