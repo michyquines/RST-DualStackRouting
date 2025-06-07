@@ -682,20 +682,20 @@ IPV6 ADDRESSING FOR THE ISP'S		(We can bypass all of these addressing configs fo
 	int lo2
 		ipv6 add b22::1/128
 		router bgp 2
-			n_____ _______::_ r________ __
-			n_____ _______::_ r________ __
-			n_____ _______::_ r________ __
-			n_____ _______::_ r________ __
-			a_____________ ___6
-				neigh __________ _______e
-				neigh __________ _______e
-				neigh __________ _______e
-				neigh __________ _______e
-				network _________/__
-				network _________/__
-				network _________/__
-				network __________/__
-				network ______/___
+			neigh b:1:22:b::1 remote-as 1
+			neigh b:2:1:b::4 remote-as 45
+			neigh b:2:4:b::5 remote-as 45
+			neigh b:1:2:b::3 remote-as 3
+			address-family ipv6
+				neigh b:1:22:b::1 activate
+				neigh b:2:1:b::4 activate
+				neigh b:2:4:b::5 activate
+				neigh b:1:2:b::3 activate
+				network  b22::1/128
+				network b:1:22:b::/64
+				network b:2:1:b::/64
+				network b:2:4:b::/64
+				network b:1:2:b::/64
 				end
 
 
@@ -994,12 +994,12 @@ B   B22::1/128 [20/0]
 
 @R4
 	conf t
-		i___ r_____ ____ 6
-			router-id _____.4
+		ipv6 router ospf 6
+			router-id 4.4.4.4
 		int lo4
 			ipv6 ospf 6 area 34
-		i________ T_____34
-			i__6 ____ 6 ____ __
+		interface Tunnel34
+			ipv6 ospf 6 area 34
 			end
 
 
@@ -1031,8 +1031,8 @@ B   B22::1/128 [20/0]
 	
 	conf t
 		router ospf 1
-			network ______ 0.0.0.0 area 3_
-			network 10.1.1._ _____.3 area _4
+			network 4.4.4.4 0.0.0.0 area 34
+			network 10.1.1.8 0.0.0.3 area 34
 			end
 
 	!!!mejo wait mga 1 min. kasi 	may mga OSPF states na dadaan pa
@@ -1193,20 +1193,20 @@ router bgp 1
 @D2
 	conf t
 		int lo1
-			ipv6 add __:__:__:__::2/64
+			ipv6 add 22:22:22:22::2/64
 		ipv6 router eigrp 10
-			eigrp router-id ______2
+			eigrp router-id 2.2.2.2
 			no shut
 		int lo1
-			i___ _____ __
+			ipv6 eigrp 10
 		int e1/1
-			____ e____ __
+			ipv6 eigrp 10
 		int vlan 10
-			____ _____ _0
+			ipv6 eigrp 10
 		int vlan 20
-			____ e____ __
+			ipv6 eigrp 10
 		int vlan 100
-			i___ _____ __
+			ipv6 eigrp 10
 			end
 			
 			
@@ -1651,12 +1651,12 @@ Optional non-transitive – An update with an attribute from this category can b
 
 Before we dig into modifications, let's review the default BGP path selection process. An in-depth analysis of the BGP path selection mechanism on Cisco IOS can be found here. A simplified summary of the process follows.
 
-1.Prefer the route with the highest weight (a local, Cisco-proprietary parameter).
-2. Prefer the route with the highest local preference.
+1.Prefer the route with the highest weight* (a local, Cisco-proprietary parameter).
+2. Prefer the route with the highest local preference*.
 3. Prefer locally-originated routes over those learned from a neighbor.
-4. Prefer the route with the shortest AS path.
+4. Prefer the route with the shortest AS path*.
 5. Prefer IGP-learned routes over those with an unknown origin.
-6. Prefer the route with the lowest MED (per AS).
+6. Prefer the route with the lowest MED* (per AS).
 7. Prefer EBGP-learned routes over IBGP-learned routes.
 8. Prefer the route whose next-hop address has the lowest IGP metric.
 9. Multipath determination
