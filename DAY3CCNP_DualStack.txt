@@ -21,27 +21,27 @@ end
 
 D2:
 CONFIG T
-____________________________________________	!wag bigay 1-199
-____________________________________________	!wag bigay 250-254
+ip dhcp excluded-add 10.2.1.1 10.2.1.199	!wag bigay 1-199
+ip dhcp excluded-add 10.2.1.250 10.2.1.254	!wag bigay 250-254
 !
-___________________				   !gawa pool for vlan 10
-  ______________________________________________   !network ni vlan 10
-  __________________________			   !default gateway ni vlan 10
+ip dhcp pool vlan10				   !gawa pool for vlan 10
+  network 10.2.1.0 255.255.255.0  		  !network ni vlan 10
+  default-router 10.2.1.254			   !default gateway ni vlan 10
 end
 !
 
 
 A1:
 config t
-_____ ___ 				!assign e0/0 via vlan 10
- __________ ____ ______ 
- _________ ______ ____ __
+int e0/0 				!assign e0/0 via vlan 10
+ switchport mode access 
+ switch access vlan 10
 
 
 A2:
-_____ ___ 				!assign e1/0 via vlan 10
- __________ ____ ______ 
- _________ ______ ____ __
+int e1/0				!assign e1/0 via vlan 10
+ switchport mode access 
+ switch access vlan 10
 
 
 
@@ -79,8 +79,8 @@ Int Range e0/0-3, e1/2-3
   switchport mode trunk
   exit
 
-____ _			!create vlan2 named CHECKMEEEE	
-____ _________
+Vlan 2			!create vlan2 named CHECKMEEEE	
+name CHECKMEEEE
 end
 
 
@@ -88,7 +88,7 @@ D2:
 config t
 no logging console
 no ip domain-lookup
-_____________ ____ _____ ____ _________ 	!make this as secondary root
+spanning-tree vlan 1-100 root secondary 	!make this as secondary root
 end
 
 !verify if VLANS are propagating
@@ -166,24 +166,24 @@ channel-group 10 mode active
 channel-protocol lacp
 
 !Po15 to D2 (use SHOW CDP NEIGHBORS to determine ports)
-___ _____ ____,___
-___ ___ _____ _____
-___ _____ _____
-___ _____ _______ ____ _-___
-______-_____ __ ____ ______
-______-________ ____
+int range   e1/0,e0/3
+swi tr encap dot1q
+swi mode trunk
+swi trunk allowed vlan 1-100
+channel-group 15 mode active
+channel-protocol lacp
 end
 
 
 @A2
 !Po20 to D1
 conf t
-___ _____ ____,___
-___ ___ _____ _____
-___ _____ _____
-___ _____ _______ ____ _-___
-______-_____ __ ____ ______
-______-________ ____
+int range e0/1,e0/2
+swi tr encap dot1q
+swi mode trunk
+swi trunk allowed vlan 1-100
+channel-group 20 mode active
+channel-protocol lacp
 
 !Po25 to D2
 int range e0/0,e0/3
